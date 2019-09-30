@@ -1,0 +1,7 @@
+{
+	"editor.insertSpaces": false,
+	"files.exclude": {
+		"obj": true,
+		"dns": true
+	}
+}
