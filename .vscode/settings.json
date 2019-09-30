@@ -2,6 +2,10 @@
 	"editor.insertSpaces": false,
 	"files.exclude": {
 		"obj": true,
-		"dns": true
+		"dns": true,
+		"dep.list": true
+	},
+	"files.associations": {
+		"options.h": "c"
 	}
 }

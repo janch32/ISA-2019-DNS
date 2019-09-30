@@ -1,6 +1,7 @@
 #include "main.h"
 
 int main(int argc, char const *argv[]){
-	printf("Hello World!\n");
+	programOptions opt = parseArguments(argc, argv);
+
 	return 0;
 }

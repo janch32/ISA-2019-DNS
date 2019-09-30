@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include "options.h"
 
 /**
  * Hlavní funkce programu
