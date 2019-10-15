@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
+#include <string.h>
 
 #define OPCODE_QUERY	0
 #define OPCODE_IQUERY	1
@@ -90,4 +92,10 @@ typedef struct DnsMessageResource{
 
 uint16_t generateId();
 
-void createRequest(pDnsMessage message, uint8_t *host, bool recursion, uint16_t type)
+void createRequestMessage(pDnsMessage message, uint8_t *host, bool recursion, bool reverse, uint16_t type);
+
+void convNameToMsg(const char *name, uint8_t **conv);
+
+void dnsParseResponse(uint8_t const *byte, pDnsMessage *res);
+
+int dnsRequestToBytes(pDnsMessage req, uint8_t** byteptr);

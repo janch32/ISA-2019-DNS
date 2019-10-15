@@ -4,9 +4,8 @@
 
 
 int main(int argc, char *const *argv){
-	int client_socket, port_number, bytestx, bytesrx;
+	int client_socket, bytestx, bytesrx;
 	socklen_t serverlen;
-	const char *server_hostname;
 	struct hostent *server;
 	struct sockaddr_in server_address;
 	unsigned char buf[BUFSIZE];
@@ -16,21 +15,18 @@ int main(int argc, char *const *argv){
 	if(parseOptions(argc, argv, &opt) != 0)
 		return 1;
 
-	printf("Test\n");
-	unsigned char exampleDnsRequest[] = {
-		// Header
-		0x12, 0x34, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-		// Query
-		0x03, 'w', 'w', 'w', 0x04, 'i', 'e', 't', 'f', 0x03, 'o', 'r', 'g', 0x00, 0x00, 0x01, 0x00, 0x01
-	};
+	uint8_t *lookup;
+	convNameToMsg(opt.lookupAddress, &lookup);
 
-	server_hostname = "8.8.8.8";
-	port_number = 53;
+	struct DnsMessage req = {0};
+	createRequestMessage(&req, lookup, opt.recursionDesired, opt.reverseLookup, TYPE_A);
+	
+	uint8_t *bytes;
+	int bytes_length = dnsRequestToBytes(&req, &bytes);
 	
 	/* 2. ziskani adresy serveru pomoci DNS */
-	
-	if ((server = gethostbyname(server_hostname)) == NULL) {
-		fprintf(stderr,"ERROR: no such host as %s\n", server_hostname);
+	if ((server = gethostbyname(opt.dnsServerHost)) == NULL) {
+		fprintf(stderr,"ERROR: no such host as %s\n", opt.dnsServerHost);
 		exit(EXIT_FAILURE);
 	}
 	
@@ -38,10 +34,7 @@ int main(int argc, char *const *argv){
 	bzero((char *) &server_address, sizeof(server_address));
 	server_address.sin_family = AF_INET;
 	bcopy((char *)server->h_addr_list[0], (char *)&server_address.sin_addr.s_addr, server->h_length);
-	server_address.sin_port = htons(port_number);
-   
-	/* tiskne informace o vzdalenem soketu */ 
-	printf("INFO: Server socket: %s : %d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
+	server_address.sin_port = htons(opt.dnsServerPort);
 	
 	/* Vytvoreni soketu */
 	if ((client_socket = socket(AF_INET, SOCK_DGRAM, 0)) <= 0)
@@ -52,7 +45,7 @@ int main(int argc, char *const *argv){
 
 	/* odeslani zpravy na server */
 	serverlen = sizeof(server_address);
-	bytestx = sendto(client_socket, exampleDnsRequest, 30, 0, (struct sockaddr *) &server_address, serverlen);
+	bytestx = sendto(client_socket, bytes, bytes_length, 0, (struct sockaddr *) &server_address, serverlen);
 	if (bytestx < 0) 
 		perror("ERROR: sendto");
 	
@@ -62,9 +55,9 @@ int main(int argc, char *const *argv){
 		perror("ERROR: recvfrom");
 	
 	printf("Request: \n");
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < bytes_length; i++)
 	{
-		printf("%02x ", exampleDnsRequest[i]);
+		printf("%02x ", bytes[i]);
 	}
 	printf("\n");
 	

@@ -6,6 +6,7 @@
 		"dep.list": true
 	},
 	"files.associations": {
-		"options.h": "c"
+		"options.h": "c",
+		"dns.h": "c"
 	}
 }
