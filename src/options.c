@@ -1,6 +1,6 @@
 #include "options.h"
 
-int parseArguments(int argc, char *const *argv, programOptions opt){
+int parseOptions (int argc, char *const *argv, programOptions opt){
 	opt->dnsServerPort = 53;
 	opt->recursionDesired = false;
 	opt->reverseLookup = false;
@@ -9,12 +9,11 @@ int parseArguments(int argc, char *const *argv, programOptions opt){
 	opt->lookupAddress = NULL;
 
 	int c;
-	while ((c = getopt(argc, argv, "-hrx6p:s:")) != -1){
+	while ((c = getopt(argc, argv, "-:hrx6p:s:")) != -1){
 		switch (c)
 		{
 			case 'h':
-				printHelp();
-				return 2;
+				printHelpAndExit();
 				break;
 			case 'r':
 				opt->recursionDesired = true;
@@ -63,10 +62,6 @@ int parseArguments(int argc, char *const *argv, programOptions opt){
 	return 0;
 }
 
-void printHelp(){
-	printf("DNS Project TODO\n");
-}
-
 int parsePort(char* port){
 	char *parseEnd;
 	long parsed = strtol(port, &parseEnd, 10);
@@ -75,4 +70,9 @@ int parsePort(char* port){
 		return -1;
 
 	return parsed;
+}
+
+void printHelpAndExit(){
+	printf("DNS Project TODO\n");
+	exit(0);
 }

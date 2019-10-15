@@ -3,7 +3,14 @@
         {
             "type": "shell",
             "label": "build",
-            "command": "/usr/bin/make"
+            "command": "/usr/bin/make",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ],
     "version": "2.0.0"

@@ -2,8 +2,8 @@
 #include <stdlib.h> 
 #include <stdio.h> 
 #include <stdbool.h>
-#include <getopt.h>
 #include <string.h>
+#include <unistd.h>
 
 #define printerr(s, ...) fprintf(stderr, s, __VA_ARGS__)
 
@@ -38,17 +38,18 @@ typedef struct ProgramOptions{
  * @return int Pokud analýza proběhne úspěšně, vrátí funkce hodnotu 0. 
  * 	V opačném případě vrátí nenulové číslo
  */
-int parseArguments(int argc, char *const *argv, programOptions opt);
+int parseOptions(int argc, char *const *argv, programOptions opt);
 
 
 /**
  * Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
+ * a ukončí program s návratovým kódem 0
  */
-void printHelp();
+void printHelpAndExit();
 
 
 /**
- * Převede číslo portu z řetězce na číslo
+ * Převede číslo portu z řetězce na číslo včetně validace
  * 
  * @param port Řetězec obsahující číslo portu
  * @return int Převedený port
