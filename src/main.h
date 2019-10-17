@@ -1,9 +1,9 @@
 #pragma once
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include "options.h"
-#include "dns.h"
-
+#include "dns_message.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

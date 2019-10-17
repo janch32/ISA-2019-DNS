@@ -1,16 +1,16 @@
 NAME=dns
 SRCFOLDER := src
 OBJFOLDER := obj
-SRCFILES := $(wildcard $(SRCFOLDER)/*.c)
-OBJFILES := $(patsubst %.c,$(OBJFOLDER)/%.o,$(notdir $(SRCFILES)))
-CC=gcc
-CFLAGS=-pedantic -Wall -Wextra -g
+SRCFILES := $(wildcard $(SRCFOLDER)/*.cpp)
+OBJFILES := $(patsubst %.cpp,$(OBJFOLDER)/%.o,$(notdir $(SRCFILES)))
+CC=g++
+CFLAGS= -std=c++11 -pedantic -Wall -Wextra -g
 
 # Startovací pravidlo - pro přehlednost
 all: dep $(NAME)
 
 # vzorové pravidlo pro generování všech objektových souborů
-$(OBJFOLDER)/%.o : $(SRCFOLDER)/%.c
+$(OBJFOLDER)/%.o : $(SRCFOLDER)/%.cpp
 	@mkdir -p $(OBJFOLDER)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
@@ -22,7 +22,7 @@ clean:
 
 # Generování závislostí
 dep:
-	@$(CC) -MM $(SRCFOLDER)/*.c >dep.list
+	@$(CC) -MM $(SRCFOLDER)/*.cpp >dep.list
 
 -include dep.list
 

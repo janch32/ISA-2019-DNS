@@ -1,59 +1,50 @@
 #pragma once
-#include <stdlib.h> 
-#include <stdio.h> 
-#include <stdbool.h>
-#include <string.h>
+#include <string>
+#include <stdexcept>
 #include <unistd.h>
 
-#define printerr(s, ...) fprintf(stderr, s, __VA_ARGS__)
+using namespace std;
 
-#define ERROR_HELP_MSG ". Run this program with -h to show available options.\n"
+#define ERROR_HELP_MSG string(". Run this program with -h to show available options")
 
+class Options{
+	private:
+ 		/// Převede číslo portu z řetězce na číslo včetně validace
+ 		///
+ 		/// @param port Řetězec obsahující číslo portu
+ 		/// @return Převedený port
+ 		/// @throw std::out_of_range Číslo je mimo interval 0-65535
+		/// @throw std::invalid_argument Řetězec není reprezentace celého čísla v desítkové soustavě
+		static int ParsePort(string port);
+		
+		/// Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
+		/// a ukončí program s návratovým kódem 0
+		static void PrintHelpAndExit();
+	public:
+		/// Požadována rekurze (Recursion Desired = 1), jinak bez rekurze
+		bool RecursionDesired;
+		
+		/// Reverzní dotaz místo přímého
+		bool ReverseLookup;
+		
+		/// Dotaz typu AAAA místo výchozího A
+		bool IPv6;
+		
+		/// Číslo portu, na který se má poslat dotaz
+		int DnsServerPort;
+		
+		/// IP adresa nebo doménové jméno serveru, kam se má zaslat dotaz
+		string DnsServerHost;
+		
+		/// Dotazovaná adresa
+		string LookupAddress;
 
-/**
- * Struktura obsahující aktuální konfiguraci spuštěného programu
- */
-typedef struct ProgramOptions{
-	/** Požadována rekurze (Recursion Desired = 1), jinak bez rekurze */
-	bool recursionDesired;
-	/** Reverzní dotaz místo přímého */
-	bool reverseLookup;
-	/** Dotaz typu AAAA místo výchozího A */
-	bool ipv6;
-	/** Číslo portu, na který se má poslat dotaz */
-	int dnsServerPort;
-	/** IP adresa nebo doménové jméno serveru, kam se má zaslat dotaz */
-	char* dnsServerHost;
-	/** Dotazovaná adresa */
-	char* lookupAddress;
-} *programOptions;
-
-
-/**
- * Analyzuje argumenty spuštění programu a vloží je do struktury opt
- * 
- * @param argc Počet argumentů z příkazové řádky
- * @param argv Pole argumentů zpříkazové řádky
- * @param opt Odkaz na strukturu pro ukládání možností spuštění
- * @return int Pokud analýza proběhne úspěšně, vrátí funkce hodnotu 0. 
- * 	V opačném případě vrátí nenulové číslo
- */
-int parseOptions(int argc, char *const *argv, programOptions opt);
-
-
-/**
- * Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
- * a ukončí program s návratovým kódem 0
- */
-void printHelpAndExit();
-
-
-/**
- * Převede číslo portu z řetězce na číslo včetně validace
- * 
- * @param port Řetězec obsahující číslo portu
- * @return int Převedený port
- * Pokud se převod nezdaří, z důvodu nepovolených znaků v řetězci nebo
- * čísla mimo intervalu je vrácená hodnota -1
- */
-int parsePort(char *port);
+		/// Analyzuje argumenty spuštění programu a vloží je do struktury opt
+		///
+		/// @param argc Počet argumentů z příkazové řádky
+		/// @param argv Pole argumentů zpříkazové řádky
+		/// @return Třída options s analyzovanými hodnotami 
+		/// @throw std::out_of_range Číslo portu není validní
+		/// @throw std::invalid_argument Chyba při analyzování argumentů (např. neznámý argument)
+		static Options Parse(int argc, char *const *argv);
+};

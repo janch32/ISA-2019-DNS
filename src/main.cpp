@@ -2,6 +2,7 @@
 
 #define BUFSIZE 512
 
+using namespace std;
 
 int main(int argc, char *const *argv){
 	int client_socket, bytestx, bytesrx;
@@ -9,24 +10,38 @@ int main(int argc, char *const *argv){
 	struct hostent *server;
 	struct sockaddr_in server_address;
 	unsigned char buf[BUFSIZE];
-	
-	struct ProgramOptions opt;
-	
-	if(parseOptions(argc, argv, &opt) != 0)
+
+	Options opt;
+
+	try{
+		opt = Options::Parse(argc, argv);
+	}catch(std::exception &ex){
+		cout << ex.what() << endl;
 		return 1;
+	}
 
-	uint8_t *lookup;
-	convNameToMsg(opt.lookupAddress, &lookup);
-
-	struct DnsMessage req = {0};
-	createRequestMessage(&req, lookup, opt.recursionDesired, opt.reverseLookup, TYPE_A);
+	Dns::Question requestQ;
+	requestQ.Name = opt.LookupAddress;
+	requestQ.Class = Dns::CLASS_IN;
+	requestQ.Type = Dns::TYPE_A;
 	
-	uint8_t *bytes;
-	int bytes_length = dnsRequestToBytes(&req, &bytes);
+	Dns::Message request;
+	request.RecursionDesired = opt.RecursionDesired;
+	request.Question.push_front(requestQ);
+	
+	Dns::Bytes bytes = request.ToBytes();
+
+	printf("Request: \n");
+	for (uint i = 0; i < bytes.size(); i++)
+	{
+		printf("%02x ", bytes[i]);
+	}
+	printf("\n");
+	//exit(0);
 	
 	/* 2. ziskani adresy serveru pomoci DNS */
-	if ((server = gethostbyname(opt.dnsServerHost)) == NULL) {
-		fprintf(stderr,"ERROR: no such host as %s\n", opt.dnsServerHost);
+	if ((server = gethostbyname(opt.DnsServerHost.c_str())) == NULL) {
+		fprintf(stderr,"ERROR: no such host as %s\n", opt.DnsServerHost.c_str());
 		exit(EXIT_FAILURE);
 	}
 	
@@ -34,7 +49,7 @@ int main(int argc, char *const *argv){
 	bzero((char *) &server_address, sizeof(server_address));
 	server_address.sin_family = AF_INET;
 	bcopy((char *)server->h_addr_list[0], (char *)&server_address.sin_addr.s_addr, server->h_length);
-	server_address.sin_port = htons(opt.dnsServerPort);
+	server_address.sin_port = htons(opt.DnsServerPort);
 	
 	/* Vytvoreni soketu */
 	if ((client_socket = socket(AF_INET, SOCK_DGRAM, 0)) <= 0)
@@ -45,7 +60,7 @@ int main(int argc, char *const *argv){
 
 	/* odeslani zpravy na server */
 	serverlen = sizeof(server_address);
-	bytestx = sendto(client_socket, bytes, bytes_length, 0, (struct sockaddr *) &server_address, serverlen);
+	bytestx = sendto(client_socket, bytes.data(), bytes.size(), 0, (struct sockaddr *) &server_address, serverlen);
 	if (bytestx < 0) 
 		perror("ERROR: sendto");
 	
@@ -54,12 +69,7 @@ int main(int argc, char *const *argv){
 	if (bytesrx < 0) 
 		perror("ERROR: recvfrom");
 	
-	printf("Request: \n");
-	for (int i = 0; i < bytes_length; i++)
-	{
-		printf("%02x ", bytes[i]);
-	}
-	printf("\n");
+	
 	
 	printf("Response: \n");
 	for (int i = 0; i < BUFSIZE; i++)
