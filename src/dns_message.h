@@ -36,9 +36,8 @@ namespace Dns{
 		list<Resource> Additional;
 
 		Message();
+		string ToString();
 		Bytes ToBytes();
-		static Resource ParseBytes(const uint8_t *bytes, int length);
+		static Message ParseBytes(Bytes *byte);
 	};
 } 
-
-//void createRequestMessage(pDnsMessage message, uint8_t *host, bool recursion, bool reverse, uint16_t type);

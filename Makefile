@@ -3,7 +3,7 @@ SRCFOLDER := src
 OBJFOLDER := obj
 SRCFILES := $(wildcard $(SRCFOLDER)/*.cpp)
 OBJFILES := $(patsubst %.cpp,$(OBJFOLDER)/%.o,$(notdir $(SRCFILES)))
-CC=g++
+CC=gcc
 CFLAGS= -std=c++11 -pedantic -Wall -Wextra -g
 
 # Startovací pravidlo - pro přehlednost
@@ -28,4 +28,4 @@ dep:
 
 # závěrečné slinkování
 $(NAME): $(OBJFILES)
-	@$(CC) $(CFLAGS) $(OBJFILES) -o $@
+	@$(CC) $(CFLAGS) $(OBJFILES) -lstdc++ -o $@

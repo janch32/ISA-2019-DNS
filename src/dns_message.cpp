@@ -4,7 +4,6 @@ using namespace Dns;
 
 uint16_t Message::GenerateId(){
 	static bool seedSet = false;
-	
 	if(!seedSet){
 		srand(time(NULL));
 		seedSet = 1;
@@ -15,6 +14,33 @@ uint16_t Message::GenerateId(){
 
 Message::Message(){
 	this->ID = GenerateId();
+}
+
+string Message::ToString(){
+	string out = "Authoritative: ";
+	out += this->AuthoritativeAnswer ? "Yes" : "No";
+	out += ", Recursive: ";
+	out += this->RecursionDesired && this->RecursionAvailable ? "Yes" : "No";
+	out += ", Truncated: ";
+	out += this->Truncated ? "Yes" : "No";
+
+	out += "\nQuestion section (" + to_string(this->Question.size()) + ")\n";
+	for(Dns::Question q : this->Question)
+		out += q.ToString();
+
+	out += "Answer section (" + to_string(this->Answer.size()) + ")\n";
+	for(Dns::Resource r : this->Answer)
+		out += r.ToString();
+	
+	out += "Authority section (" + to_string(this->Authority.size()) + ")\n";
+	for(Dns::Resource r : this->Authority)
+		out += r.ToString();
+	
+	out += "Additional section (" + to_string(this->Additional.size()) + ")\n";
+	for(Dns::Resource r : this->Additional)
+		out += r.ToString();
+
+	return out;
 }
 
 Bytes Message::ToBytes(){
@@ -35,12 +61,45 @@ Bytes Message::ToBytes(){
 
 	for(Dns::Question q : this->Question)
 		q.ToBytes(&byte);
-	/*for(Dns::Resource r : this->Answer)
+	for(Dns::Resource r : this->Answer)
 		r.ToBytes(&byte);
 	for(Dns::Resource r : this->Authority)
 		r.ToBytes(&byte);
 	for(Dns::Resource r : this->Additional)
-		r.ToBytes(&byte);*/
+		r.ToBytes(&byte);
 
 	return byte;
+}
+
+Message Message::ParseBytes(Bytes *byteptr){
+	Bytes byte = *byteptr;
+	Message msg = {};
+	
+	msg.ID = ntohs(*(uint16_t *)&byte[0]);
+	msg.IsResponse = (byte[2] & 0x80) != 0;
+	msg.Opcode = (Dns::Opcode)((byte[2] & 0x78) >> 3);
+	msg.AuthoritativeAnswer = (byte[2] & 0x4) != 0;
+	msg.Truncated = (byte[2] & 0x2) != 0;
+	msg.RecursionDesired = (byte[2] & 0x1) != 0;
+	msg.RecursionAvailable = (byte[3] & 0x80) != 0;
+	msg.ResponseCode = (Dns::Rcode)(byte[3] & 0xF);
+
+	uint index = 12;
+	int count = ntohs(*(uint16_t *)&byte[4]);
+	for (int i = 0; i < count; i++)
+		msg.Question.push_back(Dns::Question::ParseBytes(byteptr, &index));
+	
+	count = ntohs(*(uint16_t *)&byte[6]);
+	for (int i = 0; i < count; i++)
+		msg.Answer.push_back(Dns::Resource::ParseBytes(byteptr, &index));
+	
+	count = ntohs(*(uint16_t *)&byte[8]);
+	for (int i = 0; i < count; i++)
+		msg.Authority.push_back(Dns::Resource::ParseBytes(byteptr, &index));
+	
+	count = ntohs(*(uint16_t *)&byte[10]);
+	for (int i = 0; i < count; i++)
+		msg.Additional.push_back(Dns::Resource::ParseBytes(byteptr, &index));
+
+	return msg;
 }

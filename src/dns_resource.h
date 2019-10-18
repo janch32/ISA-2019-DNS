@@ -1,6 +1,6 @@
 #pragma once
-#include <cstdint>
 #include <string>
+#include <arpa/inet.h>
 #include "dns_utils.h"
 
 using namespace std;
@@ -15,11 +15,10 @@ namespace Dns{
 		Dns::Type Type;
 		Dns::Class Class;
 		int TTL;
+		Bytes Data;
 
-		char DataLength;
-		uint8_t *Data;
-
+		string ToString();
 		void ToBytes(Bytes *byte);
-		static Resource ParseBytes(const uint8_t *bytes, int length);
+		static Resource ParseBytes(Bytes *byteptr, uint *index);
 	};
 }

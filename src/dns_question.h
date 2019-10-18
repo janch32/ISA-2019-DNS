@@ -1,7 +1,5 @@
 #pragma once
-#include <cstdint>
 #include <string>
-#include <vector>
 #include <arpa/inet.h>
 #include "dns_utils.h"
 
@@ -17,7 +15,8 @@ namespace Dns{
 		Dns::Type Type;
 		Dns::Class Class;
 
+		string ToString();
 		void ToBytes(Bytes *byte);
-		static Question ParseBytes(const uint8_t *bytes, int length);
+		static Question ParseBytes(Bytes *byteptr, uint *index);
 	};
 }

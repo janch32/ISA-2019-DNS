@@ -6,7 +6,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceRoot}/dns",
-			"args": ["-s1.1.1.1", "www.fit.vutbr.cz"],
+			"args": ["-s1.1.1.1", "www.ietf.org"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
