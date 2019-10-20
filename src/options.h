@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <unistd.h>
+#include "dns_utils.h"
 
 using namespace std;
 
@@ -24,11 +25,8 @@ class Options{
 		/// Požadována rekurze (Recursion Desired = 1), jinak bez rekurze
 		bool RecursionDesired;
 		
-		/// Reverzní dotaz místo přímého
-		bool ReverseLookup;
-		
-		/// Dotaz typu AAAA místo výchozího A
-		bool IPv6;
+		/// Typ dotazu
+		Dns::Type RequestType;
 		
 		/// Číslo portu, na který se má poslat dotaz
 		int DnsServerPort;

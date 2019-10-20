@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include <cstdint>
 #include "options.h"
 #include "dns_message.h"

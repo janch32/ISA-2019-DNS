@@ -11,37 +11,42 @@ int main(int argc, char *const *argv){
 		cerr << ex.what() << endl;
 		return 1;
 	}
-
-	Dns::Question requestQ;
-	requestQ.Name = opt.LookupAddress;
-	requestQ.Class = Dns::CLASS_IN;
-	requestQ.Type = Dns::TYPE_A;
 	
 	Dns::Message request;
 	request.RecursionDesired = opt.RecursionDesired;
-	request.Question.push_front(requestQ);
+	
+	Dns::Question qst;
+	qst.Class = Dns::CLASS_IN;
+	qst.Type = opt.RequestType;
+	if(qst.Type == Dns::TYPE_PTR)
+		qst.Name = Dns::AddressToRevLookup(opt.LookupAddress);
+	else
+		qst.Name = opt.LookupAddress;
+
+	request.Question.push_back(qst);
 	
 	Dns::Bytes bytes = request.ToBytes();
+	uint8_t buffer[Dns::BUFFER_SIZE];
+	UdpClient::SendRequest(opt.DnsServerHost, opt.DnsServerPort, bytes.data(), bytes.size(), buffer, Dns::BUFFER_SIZE);	
 
-	/*cout << hex << uppercase << setw(2);
+	Dns::Bytes bufferVec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
+	Dns::Message response = Dns::Message::ParseBytes(&bufferVec);
+
+	cout << response.ToString();
+
+	return 0;
+	
+	cout << hex << uppercase << setw(2);
 	cout << "Request:" << endl;
 	for (uint i = 0; i < bytes.size(); i++)
 		cout << (int)bytes[i] << " ";
-	cout << endl;*/
-	
-	
-	uint8_t buffer[UDP_BUFFER_LENGTH];
-	UdpClient::SendRequest(opt.DnsServerHost, opt.DnsServerPort, bytes.data(), bytes.size(), buffer, UDP_BUFFER_LENGTH);
+	cout << endl;
 	
 	cout << "Response:" << hex << endl;
 	for (uint i = 0; i < sizeof(buffer); i++)
 		cout << (int)buffer[i] << " ";
 	cout << dec << endl;
 
-	Dns::Bytes bufferVec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
-	Dns::Message response = Dns::Message::ParseBytes(&bufferVec);
-
-	cout << response.ToString();
 	/*Dns::Bytes rec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
 	Dns::Message res = Dns::Message::ParseBytes(&rec);
 	Dns::Bytes res2 = res.ToBytes();

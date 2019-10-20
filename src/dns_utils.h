@@ -3,11 +3,15 @@
 #include <vector>
 #include <cstdint>
 #include <algorithm>
+#include <iomanip>
+#include <sstream>
 #include <arpa/inet.h>
 
 using namespace std;
 
 namespace Dns{
+	const uint BUFFER_SIZE = 512;
+
 	using Bytes = vector<uint8_t>;
 	
 	enum Opcode : uint8_t{
@@ -33,7 +37,8 @@ namespace Dns{
 		TYPE_WKS	= 11,
 		TYPE_PTR	= 12,
 		TYPE_MX		= 15,
-		TYPE_TXT	= 16
+		TYPE_TXT	= 16,
+		TYPE_AAAA	= 28
 	};
 
 	enum Class: uint16_t{
@@ -43,8 +48,10 @@ namespace Dns{
 	};
 	
 	void AppendNameToBytes(string name, Bytes *byte);
-
-	string GetNameFromBytes(Bytes *byteptr, uint *index);
+	
+	string GetNameFromBytes(Bytes *byteptr, uint *index, Bytes *rbyteptr = NULL);
+	
+	string AddressToRevLookup(string address);
 
 	string ClassToString(Class value);
 	string TypeToString(Type value);

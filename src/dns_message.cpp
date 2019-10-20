@@ -24,6 +24,9 @@ string Message::ToString(){
 	out += ", Truncated: ";
 	out += this->Truncated ? "Yes" : "No";
 
+	if(this->ResponseCode != SUCCESS)
+		out += "\nError: " + RcodeToString(this->ResponseCode);
+
 	out += "\nQuestion section (" + to_string(this->Question.size()) + ")\n";
 	for(Dns::Question q : this->Question)
 		out += q.ToString();

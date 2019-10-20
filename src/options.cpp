@@ -4,13 +4,12 @@ Options Options::Parse(int argc, char *const *argv){
 	Options opt;
 	opt.DnsServerPort = 53;
 	opt.RecursionDesired = false;
-	opt.ReverseLookup = false;
-	opt.IPv6 = false;
+	opt.RequestType = Dns::TYPE_A;
 	opt.DnsServerHost = "";
 	opt.LookupAddress = "";
 
 	int c;
-	while ((c = getopt(argc, argv, "-:hrx6p:s:")) != -1){
+	while ((c = getopt(argc, argv, "-:hrx6tmcp:s:")) != -1){
 		switch (c)
 		{
 			case 'h':
@@ -20,10 +19,29 @@ Options Options::Parse(int argc, char *const *argv){
 				opt.RecursionDesired = true;
 				break;
 			case 'x':
-				opt.ReverseLookup = true;
+				if(opt.RequestType != Dns::TYPE_A)
+					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+				opt.RequestType = Dns::TYPE_PTR;
 				break;
 			case '6':
-				opt.IPv6 = true;
+				if(opt.RequestType != Dns::TYPE_A)
+					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+				opt.RequestType = Dns::TYPE_AAAA;
+				break;
+			case 'c':
+				if(opt.RequestType != Dns::TYPE_A)
+					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+				opt.RequestType = Dns::TYPE_CNAME;
+				break;
+			case 'm':
+				if(opt.RequestType != Dns::TYPE_A)
+					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+				opt.RequestType = Dns::TYPE_MX;
+				break;
+			case 't':
+				if(opt.RequestType != Dns::TYPE_A)
+					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+				opt.RequestType = Dns::TYPE_TXT;
 				break;
 			case 'p':
 				opt.DnsServerPort = Options::ParsePort(optarg);
