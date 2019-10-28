@@ -22,7 +22,7 @@ int main(int argc, char *const *argv){
 		qst.Name = Dns::AddressToRevLookup(opt.LookupAddress);
 	else
 		qst.Name = opt.LookupAddress;
-
+	
 	request.Question.push_back(qst);
 	
 	Dns::Bytes bytes = request.ToBytes();

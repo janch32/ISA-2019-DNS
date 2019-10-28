@@ -38,6 +38,7 @@ string Dns::GetNameFromBytes(Bytes *byteptr, uint *index, Bytes *rbyteptr){
 			if((byte[i] & 0xC0) == 0xC0){
 				uint ptrindex = ntohs(*(uint16_t *)&byte[i]) & 0x3FFF;
 				out += GetNameFromBytes(rbyteptr != NULL ? rbyteptr : byteptr, &ptrindex);
+				i++;
 			}else{
 				len = byte[i];
 			}
@@ -49,7 +50,7 @@ string Dns::GetNameFromBytes(Bytes *byteptr, uint *index, Bytes *rbyteptr){
 		}
 	}
 
-	*index = (i < *index) ? *index + 2 : i + 1;
+	*index = i + 1;
 	return out;
 }
 

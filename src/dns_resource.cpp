@@ -36,7 +36,7 @@ string Resource::ParseData(){
 				throw std::out_of_range("Error parsing IPv6 address from DNS message - rdata is too short.");
 			char addr6[INET6_ADDRSTRLEN];
 			inet_ntop(AF_INET6, this->Data.data(), addr6, INET6_ADDRSTRLEN);
-			return string(addr);
+			return string(addr6);
 		case TYPE_TXT:
 			return string((char *)this->Data.data());
 		case TYPE_MX:
