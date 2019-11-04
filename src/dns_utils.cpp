@@ -25,9 +25,9 @@ void Dns::AppendNameToBytes(string name, Bytes *byte){
 	return;
 }
 
-string Dns::GetNameFromBytes(Bytes *byteptr, uint *index, Bytes *rbyteptr){
+string Dns::GetNameFromBytes(Bytes *byteptr, unsigned int *index, Bytes *rbyteptr){
 	Bytes byte = *byteptr;
-	uint i = *index;
+	unsigned int i = *index;
 	string out = "";
 	
 	for(int len = -1; i < byte.size(); i++){
@@ -36,7 +36,7 @@ string Dns::GetNameFromBytes(Bytes *byteptr, uint *index, Bytes *rbyteptr){
 			
 			// Dekomprese
 			if((byte[i] & 0xC0) == 0xC0){
-				uint ptrindex = ntohs(*(uint16_t *)&byte[i]) & 0x3FFF;
+				unsigned int ptrindex = ntohs(*(uint16_t *)&byte[i]) & 0x3FFF;
 				out += GetNameFromBytes(rbyteptr != NULL ? rbyteptr : byteptr, &ptrindex);
 				i++;
 			}else{

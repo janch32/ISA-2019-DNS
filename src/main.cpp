@@ -38,12 +38,12 @@ int main(int argc, char *const *argv){
 	
 	cout << hex << uppercase << setw(2);
 	cout << "Request:" << endl;
-	for (uint i = 0; i < bytes.size(); i++)
+	for (unsigned int i = 0; i < bytes.size(); i++)
 		cout << (int)bytes[i] << " ";
 	cout << endl;
 	
 	cout << "Response:" << hex << endl;
-	for (uint i = 0; i < sizeof(buffer); i++)
+	for (unsigned int i = 0; i < sizeof(buffer); i++)
 		cout << (int)buffer[i] << " ";
 	cout << dec << endl;
 
@@ -52,7 +52,7 @@ int main(int argc, char *const *argv){
 	Dns::Bytes res2 = res.ToBytes();
 
 	cout << "Response conv-back:" << endl;
-	for (uint i = 0; i < res2.size(); i++)
+	for (unsigned int i = 0; i < res2.size(); i++)
 		cout << (int)res2[i] << " ";
 	cout << endl;*/
 

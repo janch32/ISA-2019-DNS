@@ -10,7 +10,7 @@
 using namespace std;
 
 namespace Dns{
-	const uint BUFFER_SIZE = 512;
+	const unsigned int BUFFER_SIZE = 512;
 
 	using Bytes = vector<uint8_t>;
 	
@@ -49,7 +49,7 @@ namespace Dns{
 	
 	void AppendNameToBytes(string name, Bytes *byte);
 	
-	string GetNameFromBytes(Bytes *byteptr, uint *index, Bytes *rbyteptr = NULL);
+	string GetNameFromBytes(Bytes *byteptr, unsigned int *index, Bytes *rbyteptr = NULL);
 	
 	string AddressToRevLookup(string address);
 

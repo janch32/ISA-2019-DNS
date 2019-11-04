@@ -24,6 +24,6 @@ namespace Dns{
 		string ToString();
 		string ParseData();
 		void ToBytes(Bytes *byte);
-		static Resource ParseBytes(Bytes *byteptr, uint *index);
+		static Resource ParseBytes(Bytes *byteptr, unsigned int *index);
 	};
 }

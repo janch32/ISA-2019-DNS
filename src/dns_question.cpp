@@ -19,7 +19,7 @@ void Question::ToBytes(Bytes *byte){
 	*(uint16_t *)&(*byte)[index + 2] = htons(this->Class);
 }
 
-Question Question::ParseBytes(Bytes *byteptr, uint *index){
+Question Question::ParseBytes(Bytes *byteptr, unsigned int *index){
 	Bytes byte = *byteptr;
 	Question qst = {};
 

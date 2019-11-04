@@ -17,6 +17,6 @@ namespace Dns{
 
 		string ToString();
 		void ToBytes(Bytes *byte);
-		static Question ParseBytes(Bytes *byteptr, uint *index);
+		static Question ParseBytes(Bytes *byteptr, unsigned int *index);
 	};
 }

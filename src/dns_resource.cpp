@@ -17,7 +17,7 @@ string Resource::ToString(){
 }
 
 string Resource::ParseData(){
-	uint index = 0;
+	unsigned int index = 0;
 	string out;
 
 	switch(this->Type){
@@ -65,7 +65,7 @@ void Resource::ToBytes(Bytes *byte){
 	byte->insert(byte->end(), this->Data.begin(), this->Data.end());
 }
 
-Resource Resource::ParseBytes(Bytes *byteptr, uint *index){
+Resource Resource::ParseBytes(Bytes *byteptr, unsigned int *index){
 	Bytes byte = *byteptr;
 	Resource res(byteptr);
 

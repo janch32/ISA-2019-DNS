@@ -87,7 +87,7 @@ Message Message::ParseBytes(Bytes *byteptr){
 	msg.RecursionAvailable = (byte[3] & 0x80) != 0;
 	msg.ResponseCode = (Dns::Rcode)(byte[3] & 0xF);
 
-	uint index = 12;
+	unsigned int index = 12;
 	int count = ntohs(*(uint16_t *)&byte[4]);
 	for (int i = 0; i < count; i++)
 		msg.Question.push_back(Dns::Question::ParseBytes(byteptr, &index));
