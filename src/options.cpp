@@ -9,6 +9,7 @@ Options Options::Parse(int argc, char *const *argv){
 	opt.LookupAddress = "";
 
 	int c;
+	// TODO POSIX non-option
 	while ((c = getopt(argc, argv, "-:hrx6tmcp:s:")) != -1){
 		switch (c)
 		{
