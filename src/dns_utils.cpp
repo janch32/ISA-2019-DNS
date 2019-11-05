@@ -71,9 +71,10 @@ string Dns::AddressToRevLookup(string address){
 	}
 	
 	out << hex;
-	for(int i = sizeof(in6addr.__in6_u.__u6_addr8) / sizeof(in6addr.__in6_u.__u6_addr8[0]) - 1; i >= 0; i--){
-		out << (in6addr.__in6_u.__u6_addr8[i] & 0xF) << ".";
-		out << ((in6addr.__in6_u.__u6_addr8[i] >> 4) & 0xF) << ".";
+
+	for(int i = sizeof(in6addr.s6_addr) / sizeof(in6addr.s6_addr[0]) - 1; i >= 0; i--){
+		out << (in6addr.s6_addr[i] & 0xF) << ".";
+		out << ((in6addr.s6_addr[i] >> 4) & 0xF) << ".";
 	}
 	
 	return out.str() + "ip6.arpa.";

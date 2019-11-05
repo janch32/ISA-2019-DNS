@@ -1,31 +1,24 @@
-NAME=dns
-SRCFOLDER := src
-OBJFOLDER := obj
-SRCFILES := $(wildcard $(SRCFOLDER)/*.cpp)
-OBJFILES := $(patsubst %.cpp,$(OBJFOLDER)/%.o,$(notdir $(SRCFILES)))
-CC=gcc
-CFLAGS= -std=c++11 -pedantic -Wall -Wextra -g
+EXE=dns
 
-# Startovací pravidlo - pro přehlednost
-all: dep $(NAME)
+SRC_DIR := src
+OBJ_DIR := obj
 
-# vzorové pravidlo pro generování všech objektových souborů
-$(OBJFOLDER)/%.o : $(SRCFOLDER)/%.cpp
-	@mkdir -p $(OBJFOLDER)
-	@$(CC) $(CFLAGS) -c -o $@ $<
+SRC = $(wildcard $(SRC_DIR)/*.cpp)
+OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
+CC = gcc
+CFLAGS += -std=c++11 -pedantic -Wall -Wextra -g
+LDLIBS += -lstdc++
+
+.PHONY: all clean
+
+all: $(EXE)
+
+$(EXE): $(OBJ)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJFOLDER)/
-	@rm -f $(NAME)
-	@rm -f dep.list
-
-# Generování závislostí
-dep:
-	@$(CC) -MM $(SRCFOLDER)/*.cpp >dep.list
-
--include dep.list
-
-# závěrečné slinkování
-$(NAME): $(OBJFILES)
-	@$(CC) $(CFLAGS) $(OBJFILES) -lstdc++ -o $@
+	$(RM) $(OBJ)

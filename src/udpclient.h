@@ -3,6 +3,9 @@
 #include <cstring>
 #include <stdexcept>
 #include <netdb.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <errno.h>
 
 using namespace std;
 

@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include <sys/socket.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
 
 using namespace std;
 

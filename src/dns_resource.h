@@ -2,6 +2,7 @@
 #include <string>
 #include <arpa/inet.h>
 #include <iostream>
+#include <netinet/in.h>
 #include "dns_utils.h"
 
 using namespace std;

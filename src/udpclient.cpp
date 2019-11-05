@@ -16,18 +16,18 @@ void UdpClient::SendRequest(string destination, short port, uint8_t *data, int d
 	int client;
 	if ((client = socket(AF_INET, SOCK_DGRAM, 0)) <= 0)
 	{
-		throw std::runtime_error("Error creating socket " + errno);
+		throw std::runtime_error("Error creating socket " + to_string(errno));
 	}
 
 	// odeslani zpravy na server
 	socklen_t serverlen = sizeof(address);
 	int bytestx = sendto(client, data, datalen, 0, (struct sockaddr *) &address, serverlen);
 	if (bytestx < 0) 
-		throw std::runtime_error("Error sending UDP data " + errno);
+		throw std::runtime_error("Error sending UDP data " + to_string(errno));
 	
 	//prijeti odpovedi a jeji vypsani
 	int bytesrx = recvfrom(client, buffer, bufferlen, 0, (struct sockaddr *) &address, &serverlen);
 	if (bytesrx < 0) 
-		throw std::runtime_error("Error receiving UDP data " + errno);
+		throw std::runtime_error("Error receiving UDP data " + to_string(errno));
 	
 }
