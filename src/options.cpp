@@ -85,6 +85,26 @@ int Options::ParsePort(string port){
 }
 
 void Options::PrintHelpAndExit(){
-	printf("Usage: dns [-rx6] -s server [-p port] address\n"); // TODO
+	cout << "USAGE: dns [-rx6tmc] -s server [-p port] address" << endl
+	<< "LOOKUP TYPE OPTIONS:" << endl
+	<< "    If no option is specified, program defaults to A record" << endl
+	<< "    Only one flag of this type is allowed (you cannot use for ex. -6m)" << endl
+	<< "    -6  Request AAAA record" << endl
+	<< "    -t  Request TXT record" << endl
+	<< "    -m  Request MX record" << endl
+	<< "    -c  Request CNAME record" << endl
+	<< "    -x  Request PTR record (reverse query)" << endl
+	<< "        You must specify IP address instead of domain name" << endl
+	<< "OPTIONS:" << endl
+	<< "    -r      Use recursion (if it is supported by the server)" << endl
+	<< "    -s str  DNS server address (required)" << endl
+	<< "    -p int  DNS server port (optional, default=53)" << endl
+	<< "    address Lookup domain name or IP address if -x is set" << endl
+	<< "EXAMPLES:" << endl
+	<< "    dns -r -s 8.8.8.8 google.com                (A record with recursion)" << endl
+	<< "    dns -rx -s 8.8.8.8 216.58.201.110           (reverse name with recursion)" << endl
+	<< "    dns -rx -s 8.8.8.8 2a00:1450:4014:801::200e (reverse name with recursion)" << endl
+	<< "    dns -m -s 8.8.8.8 fit.vutbr.cz              (MX record without recursion)" << endl;
+
 	exit(0);
 }

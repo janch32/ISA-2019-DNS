@@ -11,6 +11,10 @@ int main(int argc, char *const *argv){
 		cerr << ex.what() << endl;
 		return 1;
 	}
+
+	#ifdef DEBUG
+	cout << "Debug flag set" << endl;
+	#endif
 	
 	Dns::Message request;
 	request.RecursionDesired = opt.RecursionDesired;
