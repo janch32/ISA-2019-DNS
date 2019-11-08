@@ -7,35 +7,38 @@
 
 using namespace std;
 
-#define ERROR_HELP_MSG string(". Run this program with -h to show available options")
+#define ERROR_HELP_MSG string(". Run this program with -h to show help")
 
 class Options{
 	private:
- 		/// Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
-		/// a ukončí program s návratovým kódem 0
+		/**
+		 * Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
+		 * a ukončí program s návratovým kódem 0
+		 */
 		static void PrintHelpAndExit();
 	public:
-		/// Požadována rekurze (Recursion Desired = 1), jinak bez rekurze
+		/** Požadována rekurze (Recursion Desired = 1), jinak bez rekurze */
 		bool RecursionDesired = false;
 		
-		/// Typ dotazu
+		/** Typ dotazu */
 		Dns::Type RequestType = Dns::TYPE_A;
-		
-		/// Číslo portu, na který se má poslat dotaz
+
+		/** Číslo portu, na který se má poslat dotaz */
 		string DnsServerPort = "53";
 		
-		/// IP adresa nebo doménové jméno serveru, kam se má zaslat dotaz
+		/** IP adresa nebo doménové jméno serveru, kam se má zaslat dotaz */
 		string DnsServerHost = "";
 		
-		/// Dotazovaná adresa
+		/** Dotazovaná adresa */
 		string LookupAddress = "";
 
-		/// Analyzuje argumenty spuštění programu a vloží je do struktury opt
-		///
-		/// @param argc Počet argumentů z příkazové řádky
-		/// @param argv Pole argumentů zpříkazové řádky
-		/// @return Třída options s analyzovanými hodnotami 
-		/// @throw std::out_of_range Číslo portu není validní
-		/// @throw std::invalid_argument Chyba při analyzování argumentů (např. neznámý argument)
+		/**
+		 * Analyzuje argumenty spuštění programu a vloží je do struktury opt
+		 * 
+		 * @param argc Počet argumentů z příkazové řádky
+		 * @param argv Pole argumentů zpříkazové řádky
+		 * @return Třída options s analyzovanými hodnotami
+		 * @throw std::invalid_argument Chyba při analyzování argumentů (např. neznámý argument)
+		 */
 		static Options Parse(int argc, char *const *argv);
 };

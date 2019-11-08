@@ -39,7 +39,7 @@ void mainProgram(int argc, char *const *argv){
 
 	Dns::Bytes bufferVec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
 	Dns::Message response = Dns::Message::ParseBytes(&bufferVec);
-
+	// TODO kontrola ID jestli se shodují
 	cout << response.ToString();
 
 	#ifdef DEBUG

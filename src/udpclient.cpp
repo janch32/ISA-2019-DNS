@@ -19,13 +19,14 @@ void UdpClient::SendRequest(string destination, string port, uint8_t *data, int 
 	if(dest == NULL)
 		throw std::invalid_argument("Unknown server address - " + destination);
 	
+	// Vytvořit socket
 	int client;
 	if ((client = socket(dest->ai_family, dest->ai_socktype, dest->ai_protocol)) <= 0)
 		throw std::runtime_error("Error creating socket - (" + to_string(errno) + ") " + string(strerror(errno)));
 
 	// Nastavit timeout přenosu na 5s 
 	struct timeval timeout = {};
-	timeout.tv_sec = 5;
+	timeout.tv_sec = UDP_TIMEOUT_SECONDS;
 	if (setsockopt (client, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
         throw std::runtime_error("Cannot set socket send timeout - (" + to_string(errno) + ") " + string(strerror(errno)));
 

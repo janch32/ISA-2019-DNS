@@ -10,7 +10,8 @@
 #define PADHEX(width, val) setfill('0') << setw(width) << std::hex << (unsigned)val
 
 /**
- * Hlavní funkce programu
+ * Výchozí funkce programu, volá logiku programu 
+ * zabelenou v try/catch bloku pro hezký výpis chyb
  * 
  * @param argc Počet zadaných argumentů
  * @param argv Pole argumentů (první je cesta ke spuštěnému programu)
@@ -18,4 +19,10 @@
  */
 int main(int argc, char *const *argv);
 
+/**
+ * Hlavní logika programu
+ * 
+ * @param argc Počet zadaných argumentů
+ * @param argv Pole argumentů (první je cesta ke spuštěnému programu)
+ */
 void mainProgram(int argc, char *const *argv);

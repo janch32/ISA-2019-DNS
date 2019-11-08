@@ -1,5 +1,4 @@
 #pragma once
-
 #include "dns_utils.h"
 #include "dns_question.h"
 #include "dns_resource.h"
@@ -12,13 +11,21 @@
 using namespace std;
 
 namespace Dns{
-	///
-	///
-	/// @see https://tools.ietf.org/html/rfc1035 (pages 25-28)
+	/**
+	 * TODO
+	 * 
+	 * @see https://tools.ietf.org/html/rfc1035 (pages 25-28)
+	 */
 	class Message{
 	private:
+		/**
+		 * 
+		 * 
+		 * @return ID DNS zprávy
+		 */
 		uint16_t GenerateId();
 	public:
+		/**  */
 		uint16_t ID;
 		bool IsResponse = false;
 		bool AuthoritativeAnswer = false;
