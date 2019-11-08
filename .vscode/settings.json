@@ -6,9 +6,9 @@
 		"dep.list": true
 	},
 	"files.associations": {
-		"options.h": "c",
-		"dns.h": "c",
-		"unistd.h": "c",
+		"options.h": "cpp",
+		"dns.h": "cpp",
+		"unistd.h": "cpp",
 		"array": "cpp",
 		"atomic": "cpp",
 		"*.tcc": "cpp",
@@ -50,5 +50,6 @@
 		"list": "cpp",
 		"iostream": "cpp",
 		"iomanip": "cpp"
-	}
+	},
+	"C_Cpp.dimInactiveRegions": false
 }

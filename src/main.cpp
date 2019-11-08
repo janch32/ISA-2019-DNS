@@ -3,19 +3,23 @@
 using namespace std;
 
 int main(int argc, char *const *argv){
-	Options opt;
-
 	try{
-		opt = Options::Parse(argc, argv);
+		mainProgram(argc, argv);
 	}catch(std::exception &ex){
 		cerr << ex.what() << endl;
 		return 1;
 	}
 
+	return 0;
+}
+
+void mainProgram(int argc, char *const *argv){
 	#ifdef DEBUG
-	cout << "Debug flag set" << endl;
+	cout << "Warning: DEBUG flag set. To compile as release build run: make clean && make" << endl << endl;
 	#endif
 	
+	Options opt = Options::Parse(argc, argv);
+
 	Dns::Message request;
 	request.RecursionDesired = opt.RecursionDesired;
 	
@@ -28,7 +32,7 @@ int main(int argc, char *const *argv){
 		qst.Name = opt.LookupAddress;
 	
 	request.Question.push_back(qst);
-	
+
 	Dns::Bytes bytes = request.ToBytes();
 	uint8_t buffer[Dns::BUFFER_SIZE];
 	UdpClient::SendRequest(opt.DnsServerHost, opt.DnsServerPort, bytes.data(), bytes.size(), buffer, Dns::BUFFER_SIZE);	
@@ -38,27 +42,20 @@ int main(int argc, char *const *argv){
 
 	cout << response.ToString();
 
-	return 0;
-	
-	cout << hex << uppercase << setw(2);
-	cout << "Request:" << endl;
-	for (unsigned int i = 0; i < bytes.size(); i++)
-		cout << (int)bytes[i] << " ";
-	cout << endl;
-	
-	cout << "Response:" << hex << endl;
-	for (unsigned int i = 0; i < sizeof(buffer); i++)
-		cout << (int)buffer[i] << " ";
-	cout << dec << endl;
+	#ifdef DEBUG
+		cout << endl << "==DEBUG==";
+		cout << endl << "REQUEST" << endl;
+		for (unsigned int i = 0; i < bytes.size(); i++)
+			cout << PADHEX(2, (int)bytes[i]) << " ";
 
-	/*Dns::Bytes rec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
-	Dns::Message res = Dns::Message::ParseBytes(&rec);
-	Dns::Bytes res2 = res.ToBytes();
+		cout << endl << "RESPONSE" << endl;
+		for (unsigned int i = 0; i < sizeof(buffer); i++)
+			cout << PADHEX(2, (int)buffer[i]) << " ";
 
-	cout << "Response conv-back:" << endl;
-	for (unsigned int i = 0; i < res2.size(); i++)
-		cout << (int)res2[i] << " ";
-	cout << endl;*/
-
-	return 0;
+		Dns::Bytes responseConvBack = response.ToBytes();
+		cout << endl << "RESPONSE_CONV_BACK" << endl;
+		for (unsigned int i = 0; i < responseConvBack.size(); i++)
+			cout << PADHEX(2, (int)responseConvBack[i]) << " ";
+		cout << endl;
+	#endif
 }

@@ -7,6 +7,8 @@
 #include "udpclient.h"
 #include <iomanip>
 
+#define PADHEX(width, val) setfill('0') << setw(width) << std::hex << (unsigned)val
+
 /**
  * Hlavní funkce programu
  * 
@@ -15,3 +17,5 @@
  * @return int Stavový kód programu
  */
 int main(int argc, char *const *argv);
+
+void mainProgram(int argc, char *const *argv);

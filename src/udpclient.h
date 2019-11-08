@@ -4,8 +4,10 @@
 #include <stdexcept>
 #include <netdb.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <errno.h>
+#include <cstring>
 
 using namespace std;
 

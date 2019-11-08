@@ -9,61 +9,68 @@ Options Options::Parse(int argc, char *const *argv){
 	opt.LookupAddress = "";
 
 	int c;
-	// TODO POSIX non-option
-	while ((c = getopt(argc, argv, "-:hrx6tmcp:s:")) != -1){
-		switch (c)
-		{
-			case 'h':
-				Options::PrintHelpAndExit();
-				break;
-			case 'r':
-				opt.RecursionDesired = true;
-				break;
-			case 'x':
-				if(opt.RequestType != Dns::TYPE_A)
-					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
-				opt.RequestType = Dns::TYPE_PTR;
-				break;
-			case '6':
-				if(opt.RequestType != Dns::TYPE_A)
-					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
-				opt.RequestType = Dns::TYPE_AAAA;
-				break;
-			case 'c':
-				if(opt.RequestType != Dns::TYPE_A)
-					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
-				opt.RequestType = Dns::TYPE_CNAME;
-				break;
-			case 'm':
-				if(opt.RequestType != Dns::TYPE_A)
-					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
-				opt.RequestType = Dns::TYPE_MX;
-				break;
-			case 't':
-				if(opt.RequestType != Dns::TYPE_A)
-					throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
-				opt.RequestType = Dns::TYPE_TXT;
-				break;
-			case 'p':
-				opt.DnsServerPort = Options::ParsePort(optarg);
-				break;
-			case 's':
-				opt.DnsServerHost = optarg;
-				break;
-			case 1: 
-				// Hodnota mimo přepínač (v našem případě hledaná adresa)
-				if(!opt.LookupAddress.empty())
-					throw std::invalid_argument("Unknown argument " + string(optarg) + ERROR_HELP_MSG);
-				
-				opt.LookupAddress = optarg;
-				break;
-			case ':': 
-				// Chybí parametr argumentu
-				throw std::invalid_argument("Missing argument for option -" + to_string(optopt) + ERROR_HELP_MSG);
-			case '?': 
-				// Neznámý přepínač
-				throw std::invalid_argument("Unknown option -" + string((char*)&optopt) + ERROR_HELP_MSG);
+	// Kvůli skvělýmu POSIX který neumý parsovat non-options v getopt 
+	// se to musí dělat takhle blbě přes dva cykly
+	while(optind < argc){
+		while ((c = getopt(argc, argv, ":hrx6tmcp:s:")) != -1){
+			switch (c)
+			{
+				case 'h':
+					Options::PrintHelpAndExit();
+					break;
+				case 'r':
+					opt.RecursionDesired = true;
+					break;
+				case 'x':
+					if(opt.RequestType != Dns::TYPE_A)
+						throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+					opt.RequestType = Dns::TYPE_PTR;
+					break;
+				case '6':
+					if(opt.RequestType != Dns::TYPE_A)
+						throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+					opt.RequestType = Dns::TYPE_AAAA;
+					break;
+				case 'c':
+					if(opt.RequestType != Dns::TYPE_A)
+						throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+					opt.RequestType = Dns::TYPE_CNAME;
+					break;
+				case 'm':
+					if(opt.RequestType != Dns::TYPE_A)
+						throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+					opt.RequestType = Dns::TYPE_MX;
+					break;
+				case 't':
+					if(opt.RequestType != Dns::TYPE_A)
+						throw std::invalid_argument("Multiple request types specified" + ERROR_HELP_MSG);
+					opt.RequestType = Dns::TYPE_TXT;
+					break;
+				case 'p':
+					opt.DnsServerPort = Options::ParsePort(optarg);
+					break;
+				case 's':
+					opt.DnsServerHost = optarg;
+					break;
+				case ':': 
+					// Chybí parametr argumentu
+					throw std::invalid_argument("Missing argument for option -" + to_string(optopt) + ERROR_HELP_MSG);
+				case '?': 
+					// Neznámý přepínač
+					throw std::invalid_argument("Unknown option -" + string((char*)&optopt) + ERROR_HELP_MSG);
+			}
+
 		}
+
+		// Hodnota mimo přepínač (v našem případě hledaná adresa)
+		if(optind < argc){
+			if(!opt.LookupAddress.empty())
+				throw std::invalid_argument("Unknown argument " + string(argv[optind]) + ERROR_HELP_MSG);
+			
+			opt.LookupAddress = argv[optind];
+		}
+		
+		optind++;
 	}
 
 	if(opt.DnsServerHost.empty() || opt.LookupAddress.empty())

@@ -6,7 +6,7 @@ OBJ_DIR := obj
 SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-CFLAGS += -pedantic -Wall -Wextra
+CFLAGS += -std=c++11 -pedantic -Wall -Wextra
 LDFLAGS += -std=c++11
 LDLIBS += -lstdc++
 
@@ -24,7 +24,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-test: debug
+test: clean debug
 
 clean:
 	$(RM) $(OBJ)
