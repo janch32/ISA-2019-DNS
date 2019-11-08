@@ -11,32 +11,24 @@ using namespace std;
 
 class Options{
 	private:
- 		/// Převede číslo portu z řetězce na číslo včetně validace
- 		///
- 		/// @param port Řetězec obsahující číslo portu
- 		/// @return Převedený port
- 		/// @throw std::out_of_range Číslo je mimo interval 0-65535
-		/// @throw std::invalid_argument Řetězec není reprezentace celého čísla v desítkové soustavě
-		static int ParsePort(string port);
-		
-		/// Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
+ 		/// Vypíše nápovědu a informace o dostupných přepínačích na standardní výstup
 		/// a ukončí program s návratovým kódem 0
 		static void PrintHelpAndExit();
 	public:
 		/// Požadována rekurze (Recursion Desired = 1), jinak bez rekurze
-		bool RecursionDesired;
+		bool RecursionDesired = false;
 		
 		/// Typ dotazu
-		Dns::Type RequestType;
+		Dns::Type RequestType = Dns::TYPE_A;
 		
 		/// Číslo portu, na který se má poslat dotaz
-		int DnsServerPort;
+		string DnsServerPort = "53";
 		
 		/// IP adresa nebo doménové jméno serveru, kam se má zaslat dotaz
-		string DnsServerHost;
+		string DnsServerHost = "";
 		
 		/// Dotazovaná adresa
-		string LookupAddress;
+		string LookupAddress = "";
 
 		/// Analyzuje argumenty spuštění programu a vloží je do struktury opt
 		///

@@ -7,7 +7,6 @@
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <errno.h>
-#include <cstring>
 
 using namespace std;
 
@@ -15,5 +14,5 @@ using namespace std;
 
 class UdpClient{
 public:
-	static void SendRequest(string destination, short port, uint8_t *data, int datalen, uint8_t *buffer, int bufferlen);
+	static void SendRequest(string destination, string port, uint8_t *data, int datalen, uint8_t *buffer, int bufferlen);
 };

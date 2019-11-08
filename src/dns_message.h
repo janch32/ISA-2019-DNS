@@ -20,11 +20,11 @@ namespace Dns{
 		uint16_t GenerateId();
 	public:
 		uint16_t ID;
-		bool IsResponse;
-		bool AuthoritativeAnswer;
-		bool Truncated;
-		bool RecursionDesired;
-		bool RecursionAvailable;
+		bool IsResponse = false;
+		bool AuthoritativeAnswer = false;
+		bool Truncated = false;
+		bool RecursionDesired = false;
+		bool RecursionAvailable = false;
 
 		/// Specifikace typu požadavku
 		Dns::Opcode Opcode;

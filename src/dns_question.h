@@ -11,9 +11,9 @@ namespace Dns{
 	/// @see https://tools.ietf.org/html/rfc1035 (section 4.1.2, pages 28-29)
 	class Question{
 	public:
-		string Name;
-		Dns::Type Type;
-		Dns::Class Class;
+		string Name = "";
+		Dns::Type Type = Dns::TYPE_A;
+		Dns::Class Class = Dns::CLASS_IN;
 
 		string ToString();
 		void ToBytes(Bytes *byte);

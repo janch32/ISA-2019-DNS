@@ -15,10 +15,10 @@ namespace Dns{
 	private:
 		Bytes ParsedFrom;
 	public:
-		string Name;
-		Dns::Type Type;
-		Dns::Class Class;
-		int TTL;
+		string Name = "";
+		Dns::Type Type = Dns::TYPE_A;
+		Dns::Class Class = Dns::CLASS_IN;
+		int TTL = 0;
 		Bytes Data;
 
 		Resource(Bytes *parsedFrom = NULL);

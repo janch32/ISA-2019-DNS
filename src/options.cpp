@@ -2,11 +2,6 @@
 
 Options Options::Parse(int argc, char *const *argv){
 	Options opt;
-	opt.DnsServerPort = 53;
-	opt.RecursionDesired = false;
-	opt.RequestType = Dns::TYPE_A;
-	opt.DnsServerHost = "";
-	opt.LookupAddress = "";
 
 	int c;
 	// Kvůli skvělýmu POSIX který neumý parsovat non-options v getopt 
@@ -47,7 +42,7 @@ Options Options::Parse(int argc, char *const *argv){
 					opt.RequestType = Dns::TYPE_TXT;
 					break;
 				case 'p':
-					opt.DnsServerPort = Options::ParsePort(optarg);
+					opt.DnsServerPort = optarg;
 					break;
 				case 's':
 					opt.DnsServerHost = optarg;
@@ -77,18 +72,6 @@ Options Options::Parse(int argc, char *const *argv){
 		throw std::invalid_argument("Missing required arguments" + ERROR_HELP_MSG);
 	
 	return opt;
-}
-
-int Options::ParsePort(string port){
-	char *parseEnd;
-	long parsed = strtol(port.c_str(), &parseEnd, 10);
-
-	if(*parseEnd != 0)
-		throw std::invalid_argument("Port is not a valid number");
-	if (parsed < 0 || parsed > 65535)
-		throw std::out_of_range("Port is out of range (0-65535)");
-
-	return parsed;
 }
 
 void Options::PrintHelpAndExit(){
