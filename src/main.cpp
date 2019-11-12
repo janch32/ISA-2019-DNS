@@ -20,6 +20,7 @@ void mainProgram(int argc, char *const *argv){
 	
 	Options opt = Options::Parse(argc, argv);
 
+	// Vyrobit dotaz
 	Dns::Message request;
 	request.RecursionDesired = opt.RecursionDesired;
 	
@@ -33,6 +34,7 @@ void mainProgram(int argc, char *const *argv){
 	
 	request.Question.push_back(qst);
 
+	// Převést dotaz na bajty a odeslat 
 	Dns::Bytes bytes = request.ToBytes();
 	uint8_t buffer[Dns::BUFFER_SIZE];
 	UdpClient::SendRequest(opt.DnsServerHost, opt.DnsServerPort, bytes.data(), bytes.size(), buffer, Dns::BUFFER_SIZE);	
@@ -42,6 +44,7 @@ void mainProgram(int argc, char *const *argv){
 	// TODO kontrola ID jestli se shodují
 	cout << response.ToString();
 
+	// Vypsat odeslané a přijaté bajty pokud je aplikace zkompilována s debug flagem
 	#ifdef DEBUG
 		cout << endl << "==DEBUG==";
 		cout << endl << "REQUEST" << endl;

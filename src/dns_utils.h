@@ -91,5 +91,8 @@ namespace Dns{
 	
 	/** Převedení výčtu Dns::Opcode na čitelný řetězec */
 	string OpcodeToString(Opcode value);
+
+	/** Kontrola, zda má seznam dostatečnou velikost, aby se předešlo přetečení */
+	#define checkListLength(size, minimum) if(size < minimum) throw std::length_error("Cannot parse DNS message - need at least " + to_string(size) + " bytes, got " + to_string(size));
 }
 

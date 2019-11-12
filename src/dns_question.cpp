@@ -13,7 +13,7 @@ string Question::ToString(){
 void Question::ToBytes(Bytes *byte){
 	AppendNameToBytes(this->Name, byte);
 	
-	int index = byte->size();
+	unsigned int index = byte->size();
 	byte->resize(sizeof(uint8_t) * (index + 4));
 	*(uint16_t *)&(*byte)[index] = htons(this->Type);
 	*(uint16_t *)&(*byte)[index + 2] = htons(this->Class);
@@ -24,7 +24,10 @@ Question Question::ParseBytes(Bytes *byteptr, unsigned int *index){
 	Question qst = {};
 
 	qst.Name = GetNameFromBytes(byteptr, index);
-	int i = *index;
+	unsigned int i = *index;
+
+	checkListLength(byteptr->size(), i + 4);
+
 	qst.Type = (Dns::Type)ntohs(*(uint16_t *)&byte[i]);
 	qst.Class = (Dns::Class)ntohs(*(uint16_t *)&byte[i+2]);
 	

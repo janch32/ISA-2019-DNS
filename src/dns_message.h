@@ -3,6 +3,7 @@
 #include "dns_question.h"
 #include "dns_resource.h"
 #include <list>
+#include <stdexcept>
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>

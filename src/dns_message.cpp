@@ -77,6 +77,8 @@ Bytes Message::ToBytes(){
 Message Message::ParseBytes(Bytes *byteptr){
 	Bytes byte = *byteptr;
 	Message msg = {};
+
+	checkListLength(byteptr->size(), 12);
 	
 	msg.ID = ntohs(*(uint16_t *)&byte[0]);
 	msg.IsResponse = (byte[2] & 0x80) != 0;

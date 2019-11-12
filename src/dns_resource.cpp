@@ -56,7 +56,7 @@ string Resource::ParseData(){
 void Resource::ToBytes(Bytes *byte){
 	AppendNameToBytes(this->Name, byte);
 	
-	int index = byte->size();
+	unsigned int index = byte->size();
 	byte->resize(sizeof(uint8_t) * (index + 10));
 	*(uint16_t *)&(*byte)[index] = htons(this->Type);
 	*(uint16_t *)&(*byte)[index + 2] = htons(this->Class);
@@ -70,11 +70,17 @@ Resource Resource::ParseBytes(Bytes *byteptr, unsigned int *index){
 	Resource res(byteptr);
 
 	res.Name = GetNameFromBytes(byteptr, index);
-	int i = *index;
+	
+	unsigned int i = *index;
+	checkListLength(byteptr->size(), i + 10);
+	
 	res.Type = (Dns::Type)ntohs(*(uint16_t *)&byte[i]);
 	res.Class = (Dns::Class)ntohs(*(uint16_t *)&byte[i+2]);
 	res.TTL = (Dns::Class)ntohl(*(uint32_t *)&byte[i+4]);
 	short datalen = ntohs(*(uint16_t *)&byte[i+8]);
+
+	checkListLength(byteptr->size(), i + 10 + datalen);
+	
 	res.Data.insert(res.Data.begin(), &byte[i+10], &byte[i+10+datalen]);
 
 	*index = i + 10 + datalen;
