@@ -49,7 +49,7 @@ Options Options::Parse(int argc, char *const *argv){
 					break;
 				case ':': 
 					// Chybí parametr argumentu
-					throw std::invalid_argument("Missing argument for option -" + to_string(optopt) + ERROR_HELP_MSG);
+					throw std::invalid_argument("Missing argument for option -" + string((char*)&optopt) + ERROR_HELP_MSG);
 				case '?': 
 					// Neznámý přepínač
 					throw std::invalid_argument("Unknown option -" + string((char*)&optopt) + ERROR_HELP_MSG);

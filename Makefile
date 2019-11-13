@@ -22,9 +22,10 @@ $(EXE): $(OBJ)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-test: clean debug
+test: debug
+	@./test/test.py
 
 clean:
 	$(RM) $(OBJ)

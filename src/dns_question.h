@@ -1,3 +1,10 @@
+/**
+ * Dotaz ve zprávě DNS knihovny
+ * 
+ * @file dns_question.h
+ * @author Jan Chaloupka (xchalo16)
+ */
+
 #pragma once
 #include <string>
 #include <arpa/inet.h>

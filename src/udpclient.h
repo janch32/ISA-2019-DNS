@@ -1,3 +1,10 @@
+/**
+ * Jednoduchá UDP komunikace se serverem pomocí Unix socketů
+ * 
+ * @file udpclient.h
+ * @author Jan Chaloupka (xchalo16)
+ */
+
 #pragma once
 #include <cstdint>
 #include <string>

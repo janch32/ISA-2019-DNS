@@ -1,3 +1,10 @@
+/**
+ * Růžné metody a truktury pro potřeby DNS knihovny
+ * 
+ * @file dns_utils.h
+ * @author Jan Chaloupka (xchalo16)
+ */
+
 #pragma once
 #include <string>
 #include <vector>

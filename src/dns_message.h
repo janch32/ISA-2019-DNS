@@ -1,3 +1,10 @@
+/**
+ * Dotaz DNS knihovny
+ * 
+ * @file dns_question.h
+ * @author Jan Chaloupka (xchalo16)
+ */
+
 #pragma once
 #include "dns_utils.h"
 #include "dns_question.h"

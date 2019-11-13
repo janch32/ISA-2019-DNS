@@ -1,3 +1,10 @@
+/**
+ * Hlavní logika programu
+ * 
+ * @file main.h
+ * @author Jan Chaloupka (xchalo16)
+ */
+
 #pragma once
 #include <iostream>
 #include <string>

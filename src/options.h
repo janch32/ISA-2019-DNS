@@ -1,3 +1,10 @@
+/**
+ * Parsování argumentů příkazové řádky
+ * 
+ * @file options.h
+ * @author Jan Chaloupka (xchalo16)
+ */
+
 #pragma once
 #include <iostream>
 #include <string>
