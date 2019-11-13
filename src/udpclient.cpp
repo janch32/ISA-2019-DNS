@@ -36,12 +36,12 @@ void UdpClient::SendRequest(string destination, string port, uint8_t *data, int 
 	// Odeslat požadavek na server
 	int bytestx = sendto(client, data, datalen, 0, dest->ai_addr, dest->ai_addrlen);
 	if (bytestx < 0) 
-		throw std::runtime_error("Error sending data - (" + to_string(errno) + ") " + string(strerror(errno)));
+		throw std::runtime_error("Error sending DNS request - (" + to_string(errno) + ") " + string(strerror(errno)));
 	
 	// Přijmout odpoveď ze serveru
 	int bytesrx = recvfrom(client, buffer, bufferlen, 0, dest->ai_addr, &dest->ai_addrlen);
 	if (bytesrx < 0) 
-		throw std::runtime_error("Error receiving data - (" + to_string(errno) + ") " + string(strerror(errno)));
+		throw std::runtime_error("Error receiving DNS response - (" + to_string(errno) + ") " + string(strerror(errno)));
 	
 	freeaddrinfo(dest);
 }

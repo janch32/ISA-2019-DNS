@@ -1,0 +1,71 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[left=3cm,top=3cm,text={15cm,24cm}]{geometry}
+\usepackage[czech]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[scaled=.85]{beramono}
+
+\usepackage{minted}
+\usepackage{xcolor}
+
+\renewcommand{\listingscaption}{Kód}
+\makeatletter
+\renewcommand{\fps@listing}{htp}
+\makeatother
+\definecolor{code_bg}{gray}{0.95}
+\newminted{cpp}{
+	bgcolor=code_bg,
+	frame=single,
+	framerule=0pt
+}
+\newmintinline{cpp}{
+	bgcolor=code_bg
+}
+\begin{document}
+
+\begin{titlepage}
+	\begin{center}
+		{
+			\LARGE\textsc{Vysoké učení technické v~Brně}\\
+			\Large\textsc{Fakulta informačních technologií}\\
+		}
+		\vspace{\stretch{0.3}}
+		{
+			\textbf{\Huge DNS Resolver}\\
+			\vspace{3mm}
+			\LARGE ISA Projekt\\
+		}
+		\vspace{\stretch{0.618}}
+	\end{center}
+	{\large Listopad 2019 \hfill Jan Chaloupka (xchalo16)}
+\end{titlepage}
+\tableofcontents
+\newpage
+
+\section{Úvod do problematiky}
+Hello world \cppinline{if(size > 5) return "bagr";}
+\section{Návrh aplikace}
+
+\section{Popis implementace}
+Jep
+\begin{listing}
+\caption{Vytvoření DNS dotazu typu MX na adresu fit.vutbr.cz}
+\begin{cppcode}
+Dns::Message request;
+request.RecursionDesired = opt.RecursionDesired;
+
+Dns::Question qst;
+qst.Class = Dns::CLASS_IN;
+qst.Type = Dns::TYPE_MX;
+qst.Name = "fit.vutbr.cz";
+request.Question.push_back(qst);
+
+Dns::Bytes bytes = request.ToBytes();
+\end{cppcode}
+\end{listing}
+\section{Informace o programu}
+
+\section{Návod na použití}
+
+\end{document}

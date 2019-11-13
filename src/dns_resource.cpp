@@ -19,37 +19,46 @@ string Resource::ToString(){
 string Resource::ParseData(){
 	unsigned int index = 0;
 	string out;
+	string email;
 
 	switch(this->Type){
-		case TYPE_NS:
-		case TYPE_CNAME:
-		case TYPE_PTR:
+		case TYPE_NS: // Parsování dat NS záznamu (jméno)
+		case TYPE_CNAME: // Parsování dat CNAME záznamu (jméno)
+		case TYPE_PTR: // Parsování dat PTR záznamu (jméno)
 			return GetNameFromBytes(&this->Data, &index, &this->ParsedFrom);
-		case TYPE_A:
+		case TYPE_A: // Parsování dat A záznamu (IPv4 adresy)
 			if(sizeof(struct in_addr) > this->Data.size())
 				throw std::out_of_range("Error parsing IPv4 address from DNS message - rdata is too short.");
 			char addr[INET_ADDRSTRLEN];
 			inet_ntop(AF_INET, this->Data.data(), addr, INET_ADDRSTRLEN);
 			return string(addr);
-		case TYPE_AAAA:
+		case TYPE_AAAA: // Parsování dat AAA záznamu (IPv6 adresy)
 			if(sizeof(struct in6_addr) > this->Data.size())
 				throw std::out_of_range("Error parsing IPv6 address from DNS message - rdata is too short.");
 			char addr6[INET6_ADDRSTRLEN];
 			inet_ntop(AF_INET6, this->Data.data(), addr6, INET6_ADDRSTRLEN);
 			return string(addr6);
-		case TYPE_TXT:
+		case TYPE_TXT: // Parsování dat TXT záznamu (string)
 			return string((char *)this->Data.data());
-		case TYPE_MX:
+		case TYPE_MX: // Parsování dat MX záznamu (short + jméno)
 			index = 2;
 			out = to_string(ntohs(*(uint16_t *)&this->Data[0]));
 			out += " " + GetNameFromBytes(&this->Data, &index, &this->ParsedFrom);
 			return out;
-		case TYPE_SOA:
-			return "<SOA DATA>";
-		case TYPE_WKS:
-			return "<WKS DATA>";
+		case TYPE_SOA: // Parsování dat SOA záznamu
+			out = GetNameFromBytes(&this->Data, &index, &this->ParsedFrom);
+			email = GetNameFromBytes(&this->Data, &index, &this->ParsedFrom);
+			out += " " + email.replace(email.find('.'), 1, "@");
+
+			if(index + 20 > this->Data.size())
+				throw std::out_of_range("Error parsing SOA data - rdata is too short.");
+			
+			for(int i = 0; i < 5; i++)
+				out += " " + to_string(ntohl(*(uint32_t *)&this->Data[index + 4*i]));
+			
+			return out;
 		default:
-			return "<UNKNOWN DATA>";
+			return "(unknown data)";
 	}
 }
 

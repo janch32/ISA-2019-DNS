@@ -1,3 +1,14 @@
 obj/
 dns
-dep.list
+
+xchalo16.tar
+
+doc/_minted-manual
+doc/*.log
+doc/*.toc
+doc/*.dvi
+doc/*.ps
+doc/*.aux
+doc/*.fls
+doc/*.fdb_latexmk
+doc/*.synctex.gz

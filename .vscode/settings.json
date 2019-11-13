@@ -49,7 +49,9 @@
 		"typeinfo": "cpp",
 		"list": "cpp",
 		"iostream": "cpp",
-		"iomanip": "cpp"
+		"iomanip": "cpp",
+		"cstring": "cpp",
+		"ctime": "cpp"
 	},
 	"C_Cpp.dimInactiveRegions": false
 }

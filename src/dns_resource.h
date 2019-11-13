@@ -11,7 +11,7 @@ namespace Dns{
 	/**
 	 * TODO
 	 * 
-	 * @see https://tools.ietf.org/html/rfc1035 (section 4.1.3, pages 29-30)
+	 * @see https://tools.ietf.org/html/rfc1035 (section 4.1.3)
 	 */
 	class Resource{
 	private:
@@ -62,6 +62,8 @@ namespace Dns{
 		
 		/**
 		 * Převede záznam z bajtů.
+		 * 
+		 * @see https://tools.ietf.org/html/rfc1035 (section 3.3)
 		 * 
 		 * @param byteptr Vektor bajtů obsahující data záznamu
 		 * @param index Ukazatel v poli na začátek dat záznamu

@@ -41,7 +41,10 @@ void mainProgram(int argc, char *const *argv){
 
 	Dns::Bytes bufferVec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
 	Dns::Message response = Dns::Message::ParseBytes(&bufferVec);
-	// TODO kontrola ID jestli se shodují
+	
+	if(response.ID != request.ID)
+		throw std::runtime_error("Failed to parse server response - ID mismatch (Request ID: " + to_string(request.ID) + ", Response ID: " + to_string(response.ID));
+	
 	cout << response.ToString();
 
 	// Vypsat odeslané a přijaté bajty pokud je aplikace zkompilována s debug flagem

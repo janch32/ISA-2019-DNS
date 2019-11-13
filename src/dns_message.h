@@ -20,32 +20,73 @@ namespace Dns{
 	class Message{
 	private:
 		/**
-		 * 
+		 * Náhodně vygenerované ID zprávy
+		 * Zavolá se v konstruktoru při vytvoření objektu
 		 * 
 		 * @return ID DNS zprávy
 		 */
 		uint16_t GenerateId();
 	public:
-		/**  */
+		/** Identifikační číslo zprávy, odpověď má mít stejné ID jako ID dotazu */
 		uint16_t ID;
+
+		/** Zpráva je dopoveď od serveru */
 		bool IsResponse = false;
+		
+		/** Odpoveď je od autoritativního serveru pro tuto doménu */
 		bool AuthoritativeAnswer = false;
-		bool Truncated = false;
+		
+		/** Zpráva se nevešla do maximální velikosti DNS zprávy (512B) */
+		bool Truncated = false; 
+		
+		/** Je požadována rekurze ze strany klienta */
 		bool RecursionDesired = false;
+		
+		/** Je rekurze k dispozici */
 		bool RecursionAvailable = false;
 
-		/// Specifikace typu požadavku
-		Dns::Opcode Opcode;
-		Rcode ResponseCode;
+		/** Typ zprávy */
+		Dns::Opcode Opcode = Dns::QUERY;
+		
+		/** Stavový kód */
+		Rcode ResponseCode = Dns::Rcode::SUCCESS;
 
+		/** Seznam dotazů ve zprávě */
 		list<Dns::Question> Question;
+		
+		/** Seznam odpovědí ve zprávě */
 		list<Resource> Answer;
+		
+		/** Seznam autorit ve zprávě */
 		list<Resource> Authority;
+
+		/** Seznam dalších záznamů ve zprávě */
 		list<Resource> Additional;
 
 		Message();
+
+		/**
+		 * Převede zprávu na uživatelsky čitelný řetězec
+		 * 
+		 * @return Uživatelsky čitelná data 
+		 */
 		string ToString();
+		
+		/**
+		 * Převede zprávu na bajty.
+		 * Data zprávy vloží na konec pole a alokuje pro ně místo
+		 * 
+		 * @param byte ukazatel na inicializované pole bajtů, kam se přidají data
+		 */
 		Bytes ToBytes();
+
+		/**
+		 * Převede zprávu z bajtů.
+		 * 
+		 * @param byteptr Vektor bajtů obsahující data zprávy
+		 * @param index Ukazatel v poli na začátek dat zprávy
+		 * @return DNS zpráva
+		 */
 		static Message ParseBytes(Bytes *byte);
 	};
 } 

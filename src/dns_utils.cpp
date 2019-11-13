@@ -110,7 +110,7 @@ string Dns::RcodeToString(Rcode value){
 		case Rcode::FORMAT_ERROR:		return "Format error - The server was unable to interpret the query";
 		case Rcode::SERVER_FAILTURE:	return "Server failture - The name server was unable to process this query due to a problem with the name server";
 		case Rcode::NAME_ERROR:			return "Name error - Domain name referenced in the query does not exist";
-		case Rcode::NOT_IMPLEMENTED:	return "Not Implemented - The name server does not support th erequested kind of query";
+		case Rcode::NOT_IMPLEMENTED:	return "Not Implemented - The name server does not support the requested kind of query";
 		case Rcode::REFUSED:			return "Refused - The name server refused to preform the specified operation";
 		default:						return "Unknown - Unknown error occured";
 	}
