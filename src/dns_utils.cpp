@@ -16,9 +16,13 @@ void Dns::AppendNameToBytes(string name, Bytes *byte){
 
 	// Komprese
 	if(conv.size() > 1 && byte->size() > conv.size()){
-		int it = distance(byte->begin(), search(byte->begin(), byte->end(), conv.begin(), conv.end()));
-		conv.resize(sizeof(uint8_t) * 2);
-		*(uint16_t *)&conv[0] = htons(it | 0xC000);
+		// Pokud je jméno nalezeno, vrátí iterátor na začátek místa, jinak vrátí iterátor na konec listu
+		Bytes::iterator searchIterator = search(byte->begin(), byte->end(), conv.begin(), conv.end());
+		if(searchIterator != byte->end()){
+			int it = distance(byte->begin(), searchIterator); // Převedení adresy na index
+			conv.resize(sizeof(uint8_t) * 2);
+			*(uint16_t *)&conv[0] = htons(it | 0xC000);
+		}
 	}
 
 	byte->insert(byte->end(), conv.begin(), conv.end());

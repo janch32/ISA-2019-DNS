@@ -24,8 +24,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-test: debug
-	@./test/test.py
+test: clean debug
+	@./test/test.js
 
 clean:
 	$(RM) $(OBJ)
