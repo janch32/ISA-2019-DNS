@@ -2,6 +2,7 @@ EXE=dns
 
 SRC_DIR := src
 OBJ_DIR := obj
+MODE := release
 
 SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
@@ -26,6 +27,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 test: clean debug
 	@./test/test.js
+	@$(RM) $(OBJ)
+	@$(RM) $(EXE)
 
 clean:
 	$(RM) $(OBJ)
+	$(RM) $(EXE)

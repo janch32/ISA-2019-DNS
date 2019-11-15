@@ -18,5 +18,11 @@ module.exports = [
 	[`-s8.8.8.8`, `-x`, `vutbr.cz`, `-p`], 
 	
 	// Nevalidní IPv6 adresa serveru
-	[`-s80d0::45fe:dqqq`, `vutbr.cz`] 
+	[`-s80d0::45fe:dqqq`, `vutbr.cz`],
+
+	// Adresa překračující limit délky jednoho labelu
+	[`-s8.8.8.8`, `reallylonglabelthatshouldfailbecausemaxlengthis63charsandthisismorethanthat.cz`],
+
+	// Adresa překračující limit délky adresy
+	[`-s8.8.8.8`, `reallylongnamethatshouldfailbecausemaxlengthis255chars.reallylongnamethatshouldfailbecausemaxlengthis255chars.reallylongnamethatshouldfailbecausemaxlengthis255chars.reallylongnamethatshouldfailbecausemaxlengthis255chars.reallylongnamethatshouldfailbecausemaxlengthis255chars`]
 ]

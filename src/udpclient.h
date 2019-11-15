@@ -27,6 +27,9 @@ public:
 	 * a uloží odpověď do bufferu
 	 * 
 	 * Pro komunikaci je nastavený timeout UDP_TIMEOUT_SECONDS
+	 * 
+	 * Funkce je z části převzatá z příkladu v manuálových 
+	 * stránkách funkce getaddrinfo
 	 * @see http://man7.org/linux/man-pages/man3/getaddrinfo.3.html
 	 * 
 	 * @param destination Adresa dotazovaného serveru

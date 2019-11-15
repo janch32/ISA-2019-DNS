@@ -32,13 +32,15 @@ void mainProgram(int argc, char *const *argv){
 	else
 		qst.Name = opt.LookupAddress;
 	
+	// Přidání dotazu do zprávy
 	request.Question.push_back(qst);
 
-	// Převést dotaz na bajty a odeslat 
+	// Převést zprávu na bajty a odeslat 
 	Dns::Bytes bytes = request.ToBytes();
 	uint8_t buffer[Dns::BUFFER_SIZE];
 	UdpClient::SendRequest(opt.DnsServerHost, opt.DnsServerPort, bytes.data(), bytes.size(), buffer, Dns::BUFFER_SIZE);	
 
+	// Buffer na bajty
 	Dns::Bytes bufferVec(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
 	Dns::Message response = Dns::Message::ParseBytes(&bufferVec);
 	

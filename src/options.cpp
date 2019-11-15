@@ -4,7 +4,7 @@ Options Options::Parse(int argc, char *const *argv){
 	Options opt;
 
 	int c;
-	// Kvůli skvělýmu POSIX který neumý parsovat non-options v getopt 
+	// Kvůli skvělýmu POSIX který neumí parsovat non-options v getopt 
 	// se to musí dělat takhle blbě přes dva cykly
 	while(optind < argc){
 		while ((c = getopt(argc, argv, ":hrx6tmcp:s:")) != -1){
