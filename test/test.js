@@ -117,6 +117,13 @@ async function TestCommunication(){
 			expectedRequest += `${byte.toString(16).padStart(2, `0`)} `;
 		});
 
+		write(`${termclr.RESET}Request is correct ... ${termclr.BOLD}`);
+		if(serverRequest.substr(6) === expectedRequest) write(`${termclr.PASS}PASS\n`);
+		else{
+			write(`${termclr.FAIL}FAIL\n`);
+			pass = false;
+		}
+
 		write(`${termclr.RESET}Request server match ... ${termclr.BOLD}`);
 		if(outRequest.indexOf(serverRequest) === 0) write(`${termclr.PASS}PASS\n`);
 		else{
@@ -131,15 +138,8 @@ async function TestCommunication(){
 			pass = false;
 		}
 		
-		write(`${termclr.RESET}Response convert ... ${termclr.BOLD}`);
+		write(`${termclr.RESET}Response parsing ... ${termclr.BOLD}`);
 		if(outResponse.indexOf(outResponseConvBack) === 0) write(`${termclr.PASS}PASS\n`);
-		else{
-			write(`${termclr.FAIL}FAIL\n`);
-			pass = false;
-		}
-
-		write(`${termclr.RESET}Request is correct ... ${termclr.BOLD}`);
-		if(serverRequest.substr(6) === expectedRequest) write(`${termclr.PASS}PASS\n`);
 		else{
 			write(`${termclr.FAIL}FAIL\n`);
 			pass = false;
