@@ -50,7 +50,7 @@ function TestWrongArgs(){
 	}
 	
 	write(passed == shouldFailArgs.length ? termclr.PASS : termclr.FAIL);
-	write(`\nArgument testing complete! Passed ${passed}/${shouldFailArgs.length}${termclr.RESET}\n\n`);
+	write(`\nArgument testing complete! ${termclr.BOLD}Passed ${passed}/${shouldFailArgs.length}${termclr.RESET}\n\n`);
 
 	return passed;
 }
@@ -149,10 +149,10 @@ async function TestCommunication(){
 		if(pass) passed++;
 	}
 
-	write(`${termclr.GRAY}Stopping UDP server...\n`);
+	write(`${termclr.GRAY}Stopping UDP server...${termclr.RESET}\n`);
 	server.Close();
 	write(passed == communicationTests.length ? termclr.PASS : termclr.FAIL);
-	write(`Communication testing complete! Passed ${passed}/${communicationTests.length}${termclr.RESET}\n\n`);
+	write(`Communication testing complete! ${termclr.BOLD}Passed ${passed}/${communicationTests.length}${termclr.RESET}\n\n`);
 
 	return passed;
 }
