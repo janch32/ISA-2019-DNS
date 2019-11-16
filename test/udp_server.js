@@ -28,7 +28,7 @@ module.exports = class UdpServer{
 	async Bind(port = UDP_PORT){
 		this.port = port;
 		return new Promise((res) => {
-			this.server.bind(port, "localhost", () => res());
+			this.server.bind(port, "127.0.0.1", () => res());
 		})
 	}
 

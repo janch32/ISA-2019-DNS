@@ -4,7 +4,6 @@
  * 
  * Pro funkčnost je třeba mít na systému nainstalovanou rozumně novou verzi node.js
  */
-//"use strict";
 
 
 const path = require(`path`);
@@ -82,7 +81,7 @@ async function TestCommunication(){
 	let passed = 0;
 	for(const test of communicationTests){
 		let pass = true;
-		let modargs = [`-slocalhost`, `-p${server.port}`, ...test.args];
+		let modargs = [`-s127.0.0.1`, `-p${server.port}`, ...test.args];
 		write(`Running with ${JSON.stringify(modargs)}\n${termclr.GRAY}`);
 		server.response = Buffer.from(new Uint8Array(test.serverResponse).buffer);
 		
@@ -93,7 +92,7 @@ async function TestCommunication(){
 		if(proc.error.code == 0) write(`${termclr.PASS}PASS\n`);
 		else{
 			write(`${termclr.FAIL}FAIL\n\n${termclr.RESET}`);
-			break;
+			continue;
 		}
 
 		/** @type {string} */

@@ -26,7 +26,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 test: clean debug
-	@./test/test.js
+	@chmod +x ./test/test.js
+	./test/test.js
 	@$(RM) $(OBJ)
 	@$(RM) $(EXE)
 
