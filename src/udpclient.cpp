@@ -23,8 +23,11 @@ void UdpClient::SendRequest(string destination, string port, uint8_t *data, int 
 	int client;
 	if ((client = socket(dest->ai_family, dest->ai_socktype, dest->ai_protocol)) <= 0)
 		throw std::runtime_error("Error creating socket - (" + to_string(errno) + ") " + string(strerror(errno)));
-
-	// Nastavit timeout přenosu obou směrů na 5s 
+ 
+	/** 
+	 * Nastavit timeout přenosu obou směrů na 5s 
+	 * @see https://stackoverflow.com/a/4182564
+	 */
 	struct timeval timeout = {};
 	timeout.tv_sec = UDP_TIMEOUT_SECONDS;
 	if (setsockopt (client, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
