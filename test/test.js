@@ -72,7 +72,7 @@ async function RunDnsResolver(args){
 }
 
 async function TestCommunication(){
-	write(`${termclr.HEADER}-------------------------------------------------\n`);
+	write(`${termclr.HEADER}─────────────────────────────────────────────────\n`);
 	write(`Communication testing (using a simple UDP server)\n`);
 	let server = new UdpServer();
 	await server.Bind();
@@ -161,15 +161,15 @@ async function RunAllTests(){
 	let passed = TestWrongArgs();
 	passed += await TestCommunication();
 
-	write(`${termclr.HEADER}+-----------------------------------------------+\n`);
-	write(`| ${termclr.BOLD}Testing complete!\t`);
+	write(`${termclr.HEADER}╭───────────────────────────────────────────────╮\n`);
+	write(`│ ${termclr.BOLD}Testing complete!\t`);
 	if(passed < shouldFailArgs.length + communicationTests.length)
 	write(`${termclr.FAIL}Some tests failed 😥`);
 	else 
 	write(`${termclr.PASS}All tests passed 🥂`);
 	
-	write(`${termclr.RESET}\t${termclr.HEADER}|\n`)
-	write(`+-----------------------------------------------+\n${termclr.RESET}`);
+	write(`${termclr.RESET}\t${termclr.HEADER}│\n`)
+	write(`╰───────────────────────────────────────────────╯\n${termclr.RESET}`);
 }
 
 RunAllTests();
