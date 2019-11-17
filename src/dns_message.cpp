@@ -31,19 +31,19 @@ string Message::ToString(){
 
 	out += "\nQuestion section (" + to_string(this->Question.size()) + ")\n";
 	for(Dns::Question q : this->Question)
-		out += q.ToString();
+		out += "  " + q.ToString();
 
 	out += "Answer section (" + to_string(this->Answer.size()) + ")\n";
 	for(Dns::Resource r : this->Answer)
-		out += r.ToString();
+		out += "  " + r.ToString();
 	
 	out += "Authority section (" + to_string(this->Authority.size()) + ")\n";
 	for(Dns::Resource r : this->Authority)
-		out += r.ToString();
+		out += "  " + r.ToString();
 	
 	out += "Additional section (" + to_string(this->Additional.size()) + ")\n";
 	for(Dns::Resource r : this->Additional)
-		out += r.ToString();
+		out += "  " + r.ToString();
 
 	return out;
 }
