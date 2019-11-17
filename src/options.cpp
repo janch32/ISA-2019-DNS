@@ -1,4 +1,4 @@
-#include "options.h"
+#include "options.hpp"
 
 Options Options::Parse(int argc, char *const *argv){
 	Options opt;

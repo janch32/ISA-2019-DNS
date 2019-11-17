@@ -1,4 +1,4 @@
-#include "dns_message.h"
+#include "dns_message.hpp"
 
 using namespace Dns;
 

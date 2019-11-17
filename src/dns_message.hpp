@@ -6,15 +6,15 @@
  */
 
 #pragma once
-#include "dns_utils.h"
-#include "dns_question.h"
-#include "dns_resource.h"
 #include <list>
 #include <stdexcept>
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>
 #include <arpa/inet.h>
+#include "dns_utils.hpp"
+#include "dns_question.hpp"
+#include "dns_resource.hpp"
 
 using namespace std;
 

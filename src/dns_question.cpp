@@ -1,4 +1,4 @@
-#include "dns_question.h"
+#include "dns_question.hpp"
 
 using namespace Dns;
 

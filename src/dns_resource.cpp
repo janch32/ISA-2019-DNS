@@ -1,4 +1,4 @@
-#include "dns_resource.h"
+#include "dns_resource.hpp"
 
 using namespace Dns;
 

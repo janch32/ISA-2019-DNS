@@ -1,4 +1,4 @@
-#include "udpclient.h"
+#include "udpclient.hpp"
 
 void UdpClient::SendRequest(string destination, string port, uint8_t *data, int datalen, uint8_t *buffer, int bufferlen){
 	// Získat adresu ze stringu

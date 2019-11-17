@@ -8,7 +8,7 @@
 #pragma once
 #include <string>
 #include <arpa/inet.h>
-#include "dns_utils.h"
+#include "dns_utils.hpp"
 
 using namespace std;
 

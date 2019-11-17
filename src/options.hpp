@@ -10,7 +10,7 @@
 #include <string>
 #include <stdexcept>
 #include <unistd.h>
-#include "dns_utils.h"
+#include "dns_utils.hpp"
 
 using namespace std;
 

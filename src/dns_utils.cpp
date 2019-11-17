@@ -1,4 +1,4 @@
-#include "dns_utils.h"
+#include "dns_utils.hpp"
 
 void Dns::AppendNameToBytes(string name, Bytes *byte){
 	int len = name.length();
