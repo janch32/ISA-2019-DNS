@@ -3,6 +3,9 @@ Projekt do předmětu ISA 2019. Program pro dotazování DNS serverů.
 
 Zdrojový kód je psaný v jazyce C++11 a využívá standardní knihovny jazyka C a C++. Seznam použitých knihoven je v dokumentaci. Kód je psaný s ohledem na maximální přenostilenost.
 
+## Rozšíření
+Oproti zadání je program rozšířen o parametry `-t`, `-m` a `-c`, které umožňují použít další typy dotazů. Popis těchto parametrů je v sekci **Spuštění programu**.
+
 ## Překlad a testování
 ### Požadavky
 Před samotnou kompilací je nutné, aby na systému byly nainstalované následující nástroje
@@ -99,6 +102,3 @@ Answer section (3)
 Authority section (0)
 Additional section (0)
 ```
-
-## Rozšíření
-Navíc oproti zadání je program rozšířen o parametry `-t`, `-m` a `-c`, které umožňují použít další typy dotazů. Popis, jak fungují je v sekci "Spuštění programu".
