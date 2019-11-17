@@ -6,6 +6,11 @@ Zdrojový kód je psaný v jazyce C++11 a využívá standardní knihovny jazyka
 ## Rozšíření
 Oproti zadání je program rozšířen o parametry `-t`, `-m` a `-c`, které umožňují použít další typy dotazů. Popis těchto parametrů je v sekci **Spuštění programu**.
 
+## Struktura projektu
+ * obj/  - Složka pro přeložené soubory
+ * src/  - Zdrojový kód programu
+ * test/ - Testovací skripty
+
 ## Překlad a testování
 ### Požadavky
 Před samotnou kompilací je nutné, aby na systému byly nainstalované následující nástroje
