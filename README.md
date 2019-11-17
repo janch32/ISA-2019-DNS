@@ -1,17 +1,17 @@
 # DNS resolver
 Projekt do předmětu ISA 2019. Program pro dotazování DNS serverů. 
 
-Zdrojový kód je psaný v jazyce C++11 a využívá standardní knihovny jazyka C a C++. Seznam použitých knihoven je v dokumentaci.
+Zdrojový kód je psaný v jazyce C++11 a využívá standardní knihovny jazyka C a C++. Seznam použitých knihoven je v dokumentaci. Kód je psaný s ohledem na maximální přenostilenost.
 
 ## Překlad a testování
 ### Požadavky
 Před samotnou kompilací je nutné, aby na systému byly nainstalované následující nástroje
- * GNU verze programu Make
+ * **GNU verze programu Make**
 	 * Na Linuxu jako standardní program `make`, v jiných systémech (např. OpenBSD) může být tento program pod názvem `gmake`
- * C compiler (Makefile využívá pro kompilaci program v proměnné `CC`)
- * Node.JS ve verzi 13.x nebo vyšší (nutné jen pro testování)
+ * **C compiler** Na Linuxových distribucích bývá často jako součást balíčku `build-essential` (Makefile využívá pro kompilaci program v proměnné `CC`)
+ * **Node.JS** ve verzi 13.x nebo vyšší (**nutné jen pro testování**)
 
-### Make příkazy
+### Makefile
 Makefile je psaný pro **GNU Make**. Výchozí příkaz je `all`.
 Pokud chcete přeložit projekt příkazem `debug` a je již přeložen příkazem `all` (a naopak), je nutné před tím spustit čistící příkaz `clean`.
 
@@ -86,7 +86,7 @@ Answer section (2)
 Authority section (0)
 Additional section (0)
 ```
-### Dotaz na IPv6 (AAAA) záznamy domény
+### Dotaz na IPv6 (AAAA záznamy) domény
 ```
 $ dns -r6 -s8.8.8.8 www.ietf.org
 Authoritative: No, Recursive: Yes, Truncated: No
