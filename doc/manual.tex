@@ -24,6 +24,8 @@
 	bgcolor=code_bg
 }
 
+%\setcounter{tocdepth}{2}
+
 \begin{document}
 
 \begin{titlepage}
@@ -46,27 +48,26 @@
 \newpage
 
 \section{Úvod do problematiky}
-\subsection{Struktura DNS paketu}
-Detailní informace o struktuře DNS paketů jsou popsány v dokumentu RFC 1035\footnote{Celé znění dokumentu RFC 1035: \url{www.ietf.org/rfc/rfc1035}}, ze kterého se v tomto projektu vychází. Navíc se v projektu využívají záznamy a struktury související s IPv6, které jsou definovány v dokumentu RFC 3596\footnote{Celé znění dokumentu RFC 3596: \url{www.ietf.org/rfc/rfc3596}}
+\subsection{DNS paket}
+Detailní informace o DNS paketu jsou popsány v dokumentu RFC 1035\footnote{Celé znění dokumentu RFC 1035: \url{www.ietf.org/rfc/rfc1035}}, ze kterého se v tomto projektu vychází. Navíc se v projektu využívají záznamy a struktury související s IPv6, které jsou definovány v dokumentu RFC 3596\footnote{Celé znění dokumentu RFC 3596: \url{www.ietf.org/rfc/rfc3596}}
 
-Pro komunikaci využívá DNS protokol UDP, v základu na portu 53. Není tak zaručeno, že zpráva dorazí bez chyby. Samotný DNS paket je rozdělen na pět základních částí. Detailně je DNS zpráva popsána v RFC 1035, sekce 4.
+\subsubsection{Přenos}
+Pro komunikaci využívá DNS protokol UDP, v základu na portu 53. Není tak zaručeno, že zpráva dorazí bez chyby. Zpráva je kódována ve formátu big-endian, proto je potřeba při implementaci použít standardní funkce pro konverzi mezi endiany zařízení a síťové vrstvy.
 
-\subsubsection{Hlavička}
-Vždy přítomná část zprávy. Obsahuje základní informace jako ID, stavový kód, možnosti dotazu a údaje o počtu záznamů v jednotlivých sekcí.
+\subsubsection{Struktura}
+Samotný DNS paket je rozdělen na pět základních částí. Detailně je DNS zpráva popsána v RFC 1035, sekce 4.
 
-\subsubsection{Dotazy}
+Na začátku každé DNS zprávy je vždy přítomná \textbf{hlavička}. Obsahuje základní informace jako ID, stavový kód, možnosti dotazu a údaje o počtu záznamů v jednotlivých sekcí.
+Po hlavičce následuje \textbf{sekce dotazů} od klienta. Každý dotaz obsahuje název domény ke které se dotaz vztahuje a typ dotazu.
+Odpovědi serveru na dotazy klienta jsou v \textbf{sekci odpovědí}. Odpověď je struktura \textbf{záznam}, stejná struktura je využita i v sekci \textbf{autorit} a sekci \textbf{dalších záznamů}.
 
-\subsubsection{Odpovědi}
-
-\subsubsection{Autority}
-
-\subsubsection{Další záznamy}
-
+\subsubsection{Komprese doménových jmen}
+Aby zpráva zabírala co nejméně místa, je využita základní komprese doménových jmen. Pokud se část doménového jména již před tím ve zprávě vyskytla, je na tuto část uložen ukazatel. Ukazatel se může vyskytovat v kterékoliv části zprávy místo specifikace délky labelu jména. Ukazatel je ve formátu \texttt{11XX XXXX XXXX XXXX}, kde \textbf{X} je index doménového jména od začátku zprávy. Pokud tedy je dělka labelu větší než 191, jedná se o ukazatel. Více o kompresi v RFC1035, sekce 4.1.4.
 
 \subsection{Reverzní DNS dotaz}
 Reverzní záznam slouží k přiřazení doménového jména k IP adrese. Tento záznam je označený jako \texttt{PTR} a obsahuje v datové sekci doménové jméno.
 Pro získání tohoto záznamu je třeba poslat dotaz typu \texttt{PTR} s IP adresou ve speciálním tvaru jako doménové jméno.
-
+\newpage
 \subsubsection{Převedení IPv4 adresy do PTR formátu}
 Adresa typu IPv4 se převede obrácením pořadí jednotlivých oktetů a přidáním řetězce \texttt{.in-addr.arpa.} na konec (RFC1035 sekce 3.5).
 \paragraph{Příklad:}\texttt{203.99.78.77.in-addr.arpa.} odpovídá IP adrese \texttt{77.78.99.203}
@@ -75,13 +76,50 @@ Adresa typu IPv4 se převede obrácením pořadí jednotlivých oktetů a přid�
 Převedení IPv6 adresy funguje na podobném principu jako v4 adresy. Adresa se rozdělí po půl bajtech (jeden hexa znak) a zapíše se v plné délce v obráceném pořadí. Znaky jsou dděleny tečkou. Nakonec se za adresu přidá řetězec \texttt{.ip6.arpa.} (RFC3596 sekce 2.5).
 \paragraph{Příklad:}Adrese \texttt{2001:67c:1220:809::93e5:917} odpovídá zápis \texttt{7.1.9.0.5.e.3\linebreak .9.0.0.0.0.0.0.0.0.9.0.8.0.0.2.2.1.c.7.6.0.1.0.0.2.ip6.arpa.}
 
+\newpage
 \section{Návrh aplikace}
-Výsledná aplikace je psaná v jazyce C++, konkrétně ve standardu C++11. 
+Aplikace je rozdělena na čtyři funkční celky, je využit objektový přístup. Jednotlivé části jsou navrhnuty tak, aby byly na sobě nezávislé a samostatně funkční. Části jako \textbf{DNS knihovna}, \textbf{UDP klient} a \textbf{Zpracování argumentů} je možné použít jako knihovny v jiném projektu.
 
 
+
+\subsection{DNS knihovna}
+Knihovna ulehčující práci s DNS zprávami, vytvořena především za pomoci referenčního standardu RFC 1035. Obdoba C knihovny \textbf{resolv.h}, s tím rozdílem, že je zde využito možností jazyka C++ a celá knihovna je objektově založená.
+
+Obsahuje objekty pro vytvoření DNS zprávy, dotazu, záznamu a metody pro převod těchto objektů z a do binární podoby. Při konverzi není použita struktura s pevně daným obsahem, ale výsledné bajty se vytváří bitovými a zapisováním do pole bajtů. Toto řešení je zvoleno proto, že dle mého názoru je toto řešení robustnější s ohledem na různé endiany systémů, a v případě že by se někdo v budoucnu rozhodl refaktorovat tuto knihovnu, přeskládáním atributů se nezmění chování programu. Objekty obsahují i metody pro výpis jejich dat do čitelné podoby, toho lze využít pro výpis dat uživateli na standardní výstup programu.
+
+Kromě objektů knihovna zahrnuje i výčty používané v DNS zprávě, jako například: typ zprávy, stavový kód, typ záznamu a k těmto výčtům je i funkce pro výpis kódů v čitelné podobě.
+
+\subsection{UDP klient}
+Jednoduchý UDP klient, který odešle zprávu na specifikovaný server a uloží do bufferu odpověď. Jedná se o zabalení BSD soketů pro snadnější používání. Součástí je i převod adres z řetězce do struktury adresy, stačí tak specifikovat jméno serveru, například \texttt{kazi.fit.vutbr.cz} a klient se o vše postará. 
+
+Zahrnuta je i podpora pro komunikaci se serverem IPv6 adresou. Pokud nastane chyba při převodu adresy nebo soketové komunikaci, je vyvolána výjimka. Stejně tak je vyvolána vyjímka, pokud server neodpoví do určitého intervalu. Kód je z části převzatý z manuálových stránek  funkce \texttt{getaddrinfo}\footnote{Man stránka funkce \texttt{getaddrinfo}: \url{man7.org/linux/man-pages/man3/getaddrinfo.3.html}}.
+
+\subsection{Zpracování argumentů programu}
+Pomocný modul pro zpracování argumentů DNS resolveru. Interně ke zpracování využívá POSIX verzi funkce \texttt{getopt}\footnote{Man stránka funkce \texttt{getopt}: \url{man.openbsd.org/getopt.3}}. Atributy jsou psané přímo pro tento projekt, avšak s minimální změnou lze pro zpracování jiných argumentů. 
+Funkčnost je jednoduchá, stačí předat argumenty programu a pokud jsou v pořádku, je vrácen objekt se získanými parametry.
+
+\subsection{DNS Resolver}
+Hlavní část projektu, je to samotná logika programu. Pracuje s ostatními moduly a obsluhuje vstup a výstup programu. Získá možnosti programu z modulu pro zpracování argumentů, následně podle vstupních parametrů sestaví za pomocí vlastní DNS knihovny DNS zprávu s dotazem, oděšle tuto zprávu DNS serveru pomocí UDP klienta a odpověď převede na DNS zprávu, kterou vypíše uživateli na standardní výstup. 
+
+Toto všechno proběhne za předpokladu, že v procesu nenastala žádná výjimka. Pro obsluhu výjimek program obsahuje funkci, která výjimku zachytí a vypíše ji na standardní chybový výstup do uživatelem čitelné podoby.
 
 \section{Popis implementace}
+Zdrojový kód aplikace je psán v programovacím jazyce C++, konkrétně jeho standardu C++11. 
+Je využit objektově orientovaný přístup.
 
+Zdrojový kód knihovny DNS je v souborech: \texttt{dns\_message.cpp} (Celá DNS zpráva), \texttt{dns\_resource.cpp} (DNS záznam), \texttt{dns\_question.cpp} (DNS dotaz), \texttt{dns\_utils.cpp} (Pomocné struktury a funkce pro práci s DNS zprávou).
+
+Zdrojový kód UDP klienta je v souboru \texttt{udpclient.cpp}, kód zpracování argumentů je v souboru \texttt{options.cpp} a samotné tělo programu je v souboru \texttt{main.cpp}.
+
+\subsection{Struktura adresáře projektu}
+\begin{itemize}
+\item \texttt{obj/} \quad Složka pro přeložené \texttt{.o} soubory
+\item \texttt{src/} \quad Složka obsahující zdrojový kód a hlavičky
+\item \texttt{test/} \quad Složka s automatickými blackbox testy
+\item \texttt{Makefile} \quad Cíle pro program \textbf{GNU Make}
+\item \texttt{README} \quad Základní informace o projektu
+\item \texttt{manual.pdf} \quad Podrobná dokumentace projektu (tento soubor)
+\end{itemize}
 \subsection{Seznam použitých knihoven}
 
 Aplikace využívá následující standardní knihovny jazyka C++\footnote{Seznam standardních C++ knihoven: \url{en.cppreference.com/w/cpp/header}}: 
@@ -107,9 +145,101 @@ Kromě toho je v projektu využito několika POSIX knihoven jazkya C\footnote{Se
 \texttt{sys/time.h} a
 \texttt{unistd.h}.
 
-
+\newpage
 \section{Informace o programu}
 
+\subsection{Formát výpisu}
+Pokud program skončí úspěšně, vypíše na standardní výstup informace z DNS serveru v následujícím formátu:
+\begin{cppcode}
+Authoritative: XX, Recursive: XX, Truncated: XX
+Question section (n)
+  <Dotazy>
+Answer section (n)
+  <Záznamy>
+Authority section (n)
+  <Záznamy>
+Additional section (n)
+  <Záznamy>
+\end{cppcode}
+Kde \textbf{Authoritative} značí, zda je DNS server autoritativní, \textbf{Recursive} značí, zda byl dotaz proveden rekurzivně (klient vyžádal rekurzivní zpracování a server toto podporuje) a \textbf{Truncated} značí, že se přijatá zpráva nevlezla do maximální velikosti DNS zprávy (512 bajtů) a byla oříznuta. Místo XX je dosazeno \textbf{Yes} nebo \textbf{No}.
+
+Následuje výpis všech záznamů a dotazů. Za \textbf{n} je dosazen počet záznamů v dané sekci. V každé sekci je záznam odsazen dvěma mezerami a jeden záznam je na jeden řádek. Za \textbf{<Dotazy>} jsou dosazeny konkrétní dotazy, stejně tak pro \textbf{<Záznamy>}.
+
+\subsubsection{Formát dotazu}
+\begin{cppcode}
+JMÉNO, TYP, TŘÍDA
+\end{cppcode}
+\textbf{JMÉNO} je doménové jméno, \textbf{TYP} je typ dotazu, \textbf{TŘÍDA} je třída dotazu (vždy IN).
+
+\subsubsection{Formát záznamu}
+\begin{cppcode}
+JMÉNO, TYP, TŘÍDA, TTL, DATA
+\end{cppcode}
+\textbf{JMÉNO} je doménové jméno, \textbf{TYP} je typ dotazu, \textbf{TŘÍDA} je třída dotazu (vždy IN). \textbf{TTL} značí platnost záznamu v sekundách a \textbf{DATA} jsou data záznamu - jednotlivé položky dat jsou odděleny mezerou.
+
+\newpage
 \section{Návod na použití}
+Pořadí všech parametrů je libovolné. Program umožňuje zadávání parametrů více způsoby tak, jak je zvykem u jiných programů. 
+Například \texttt{-s8.8.8.8 -6rp 53} je validní zápis argumentů programu.
+\begin{cppcode}
+dns  [-rx6tmc] -s server [-p port] adresa
+\end{cppcode}
+\subsection{Parametry}
+\subsubsection{Typ dotazu}
+Pokud není specifikován typ dotazu, je jako výchozí použít A dotaz (získání IPv4 adres). V jednom dotazu (spoštění programu) \textbf{není povoleno kombinovat více typů dotazů}.
+\begin{itemize}
+	\item \cppinline{-6}\qquad IPv6 adresy (typ AAAA)
+	\item \cppinline{-t}\qquad Textové záznamy (typ TXT)
+	\item \cppinline{-m}\qquad E-mailové servery obsluhující doménu (typ MX)
+	\item \cppinline{-c}\qquad Aliasy domény (typ CNAME)
+	\item \cppinline{-x}\qquad Reverzní záznamy pro IP adresu (typ PTR)
+\end{itemize}
+\subsubsection{Možnosti dotazu}
+\begin{itemize}
+	\item \cppinline{-r}\quad Signalizace serveru, že se dotaz má provést rekurzivně, pokud server tuto volbu podporuje
+	\item \cppinline{-s server}\quad Adresa dotazovaného DNS serveru \textbf{(povinné)}
+	\item \cppinline{-p port}\quad Port na kterém dotazovaný DNS server naslouchá (výchozí = 53)
+	\item \cppinline{adresa}\quad Dotazovaná adresa ve formátu doménového jména \textbf{(povinné)}	
+	\item[]Pokud je dotaz na reverzní záznam (přepínač\texttt{-x}), očekává se místo doménového jména IPv4 nebo IPv6 adresa ve standardním tvaru
+\end{itemize}
+
+\newpage
+\subsection{Příklady použití}
+\subsubsection{Dotaz na IPv4 (A záznamy) domény}
+\begin{cppcode}
+> dns -rs 8.8.8.8 www.fit.vutbr.cz
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  www.fit.vutbr.cz., A, IN
+Answer section (1)
+  www.fit.vutbr.cz., A, IN, 14144, 147.229.9.23
+Authority section (0)
+Additional section (0)
+\end{cppcode}
+
+\subsubsection{Reverzní dotaz na IP adresu}
+\begin{cppcode}
+> dns -rx -s 8.8.8.8 147.229.9.23
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  23.9.229.147.in-addr.arpa., PTR, IN
+Answer section (1)
+  23.9.229.147.in-addr.arpa., PTR, IN, 10581, www.fit.vutbr.cz.
+Authority section (0)
+Additional section (0)
+\end{cppcode}
+
+\subsubsection{Dotaz na MX záznamy domény}
+\begin{cppcode}
+> dns -rm -s 8.8.8.8 seznam.cz
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  seznam.cz., MX, IN
+Answer section (2)
+  seznam.cz., MX, IN, 76, 10 mx1.seznam.cz.
+  seznam.cz., MX, IN, 76, 20 mx2.seznam.cz.
+Authority section (0)
+Additional section (0)
+\end{cppcode}
 
 \end{document}
