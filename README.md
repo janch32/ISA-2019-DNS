@@ -1,4 +1,4 @@
-# DNS resolver
+# DNS Resolver
 Projekt do předmětu ISA 2019. Program pro dotazování DNS serverů. 
 
 Zdrojový kód je psaný v jazyce C++11 a využívá standardní knihovny jazyka C a C++. Seznam použitých knihoven je v dokumentaci. Kód je psaný s ohledem na maximální přenostilenost.

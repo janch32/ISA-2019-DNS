@@ -85,7 +85,7 @@ Resource Resource::ParseBytes(Bytes *byteptr, unsigned int *index){
 	
 	res.Type = (Dns::Type)ntohs(*(uint16_t *)&byte[i]);
 	res.Class = (Dns::Class)ntohs(*(uint16_t *)&byte[i+2]);
-	res.TTL = (Dns::Class)ntohl(*(uint32_t *)&byte[i+4]);
+	res.TTL = (int)ntohl(*(uint32_t *)&byte[i+4]);
 	short datalen = ntohs(*(uint16_t *)&byte[i+8]);
 
 	checkListLength(byteptr->size(), i + 10 + datalen);

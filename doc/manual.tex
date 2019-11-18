@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
+\usepackage{hyperref}
 \usepackage[scaled=.85]{beramono}
 
 \usepackage{minted}
@@ -22,6 +23,7 @@
 \newmintinline{cpp}{
 	bgcolor=code_bg
 }
+
 \begin{document}
 
 \begin{titlepage}
@@ -44,26 +46,68 @@
 \newpage
 
 \section{Úvod do problematiky}
-Hello world \cppinline{if(size > 5) return "bagr";}
+\subsection{Struktura DNS paketu}
+Detailní informace o struktuře DNS paketů jsou popsány v dokumentu RFC 1035\footnote{Celé znění dokumentu RFC 1035: \url{www.ietf.org/rfc/rfc1035}}, ze kterého se v tomto projektu vychází. Navíc se v projektu využívají záznamy a struktury související s IPv6, které jsou definovány v dokumentu RFC 3596\footnote{Celé znění dokumentu RFC 3596: \url{www.ietf.org/rfc/rfc3596}}
+
+Pro komunikaci využívá DNS protokol UDP, v základu na portu 53. Není tak zaručeno, že zpráva dorazí bez chyby. Samotný DNS paket je rozdělen na pět základních částí. Detailně je DNS zpráva popsána v RFC 1035, sekce 4.
+
+\subsubsection{Hlavička}
+Vždy přítomná část zprávy. Obsahuje základní informace jako ID, stavový kód, možnosti dotazu a údaje o počtu záznamů v jednotlivých sekcí.
+
+\subsubsection{Dotazy}
+
+\subsubsection{Odpovědi}
+
+\subsubsection{Autority}
+
+\subsubsection{Další záznamy}
+
+
+\subsection{Reverzní DNS dotaz}
+Reverzní záznam slouží k přiřazení doménového jména k IP adrese. Tento záznam je označený jako \texttt{PTR} a obsahuje v datové sekci doménové jméno.
+Pro získání tohoto záznamu je třeba poslat dotaz typu \texttt{PTR} s IP adresou ve speciálním tvaru jako doménové jméno.
+
+\subsubsection{Převedení IPv4 adresy do PTR formátu}
+Adresa typu IPv4 se převede obrácením pořadí jednotlivých oktetů a přidáním řetězce \texttt{.in-addr.arpa.} na konec (RFC1035 sekce 3.5).
+\paragraph{Příklad:}\texttt{203.99.78.77.in-addr.arpa.} odpovídá IP adrese \texttt{77.78.99.203}
+
+\subsubsection{Převedení IPv6 adresy do PTR formátu}
+Převedení IPv6 adresy funguje na podobném principu jako v4 adresy. Adresa se rozdělí po půl bajtech (jeden hexa znak) a zapíše se v plné délce v obráceném pořadí. Znaky jsou dděleny tečkou. Nakonec se za adresu přidá řetězec \texttt{.ip6.arpa.} (RFC3596 sekce 2.5).
+\paragraph{Příklad:}Adrese \texttt{2001:67c:1220:809::93e5:917} odpovídá zápis \texttt{7.1.9.0.5.e.3\linebreak .9.0.0.0.0.0.0.0.0.9.0.8.0.0.2.2.1.c.7.6.0.1.0.0.2.ip6.arpa.}
+
 \section{Návrh aplikace}
+Výsledná aplikace je psaná v jazyce C++, konkrétně ve standardu C++11. 
+
+
 
 \section{Popis implementace}
-Jep
-\begin{listing}
-\caption{Vytvoření DNS dotazu typu MX na adresu fit.vutbr.cz}
-\begin{cppcode}
-Dns::Message request;
-request.RecursionDesired = opt.RecursionDesired;
 
-Dns::Question qst;
-qst.Class = Dns::CLASS_IN;
-qst.Type = Dns::TYPE_MX;
-qst.Name = "fit.vutbr.cz";
-request.Question.push_back(qst);
+\subsection{Seznam použitých knihoven}
 
-Dns::Bytes bytes = request.ToBytes();
-\end{cppcode}
-\end{listing}
+Aplikace využívá následující standardní knihovny jazyka C++\footnote{Seznam standardních C++ knihoven: \url{en.cppreference.com/w/cpp/header}}: 
+\texttt{algorithm},
+\texttt{cerrno},
+\texttt{cstdint},
+\texttt{cstdlib},
+\texttt{cstring},
+\texttt{ctime},
+\texttt{iomanip},
+\texttt{iostream},
+\texttt{list},
+\texttt{sstream},
+\texttt{stdexcept},
+\texttt{string} a
+\texttt{vector}.
+
+Kromě toho je v projektu využito několika POSIX knihoven jazkya C\footnote{Seznam C POSIX knihoven: \url{pubs.opengroup.org/onlinepubs/9699919799/idx/head.html}}, zejména pro práci s BSD sockety. Použité C POSIX knihovny jsou:
+\texttt{arpa/inet.h},
+\texttt{netdb.h},
+\texttt{netinet/in.h},
+\texttt{sys/socket.h},
+\texttt{sys/time.h} a
+\texttt{unistd.h}.
+
+
 \section{Informace o programu}
 
 \section{Návod na použití}

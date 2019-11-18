@@ -5,6 +5,7 @@ xchalo16.tar
 
 doc/_minted-manual
 doc/*.log
+doc/*.out
 doc/*.toc
 doc/*.dvi
 doc/*.ps
